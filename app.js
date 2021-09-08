@@ -16,7 +16,12 @@ console.clear()
 
 
 //DATABASE
-mongoose.connect('mongodb://localhost:27017/final_test', {
+// mongoose.connect('mongodb://localhost:27017/final_test', {
+//     useNewUrlParser: true, 
+//     useUnifiedTopology: true,
+    
+// })
+mongoose.connect('mongodb+srv://patrick123:johnpatrick@cluster0.udls2.mongodb.net/Contact-Tracing-Application?retryWrites=true&w=majority', {
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     
