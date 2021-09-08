@@ -1,0 +1,141 @@
+<%- include('../partials/header') %> 
+<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+<title>Scanning QR</title>
+<style>
+    .cont{
+        width: 600px;
+        height: 500px;
+        padding: 20px;
+    }
+    .testz{
+            width: 600px;
+            height: 500px;
+        }
+    #preview{
+        position: relative;
+        min-width: 100%;
+        max-height: 100%;
+        width: 400px;
+        height: 400px;
+        /* border: 1px solid red; */
+        margin: 0 auto;
+    }
+    .v{
+        height: 98vh;
+    }
+    @media (max-width: 570px){
+        .cont{
+            width:450px;
+            
+            
+        }
+        #preview{
+            width: 250px;
+        }
+    }
+    .dis{
+        margin: 0;
+        background-color: red;
+        transition: margin-top 1s;
+        z-index: -99;
+    }
+    @media (max-width: 500px){
+        .cont{
+            width:300px;
+            
+            
+        }
+        #preview{
+            width: 100px;
+        }
+    }
+</style>
+</head>
+<body class="d-flex flex-column v">
+
+<!-- <h1 class="time text-center text-primary"></h1> -->
+    <% if (messages.success) { %>
+        
+     <h1 class="text-center text-primary dis"><%= messages.success %> </h1>
+    <% } %>
+    <% if (messages.error) { %>
+     <h1 class="text-danger text-center dis"><%= messages.error %> </h1>
+    <% } %>
+    <div class="container bg-primary cont mt-5 d-flex flex-column">
+        <p class="text-center lead">Align your QR Code infront of the scanner para ma dodong</p>
+        <video id="preview"></video>
+        <label id="qrt" class="form-label text-warning" for="qrText">Users Unique ID</label>
+        <form action="/give-qr" method="POST" id="uniqueid">
+            <input type="text" name="qrText" id="qrText" class="form-control" readonly required>
+        </form>
+        
+    </div>
+    <div class="container bg-danger testz mt-5">
+        <p class="text-center lead">Align your QR Code infront of the scanner para ma dodong</p>
+        <% if (messages.info) { %>
+            <img src="<%= messages.info %> " alt="" class="img-fluid"> 
+        <% } %>
+    </div>
+
+<%- include('../partials/footer') %>
+<script src="/scripts/qrscript.js"></script>
+<script>
+  
+    let z = document.querySelector('.time')
+    const timer = function(){
+            setInterval(()=>{
+            const date = new Date()
+            let day = date.getDate()
+            let month = date.getMonth()
+            let year = date.getFullYear()
+            let hour = date.getHours()
+            let minute = date.getMinutes()
+            let secs = date.getSeconds()
+            let h, ind
+            if(minute<10){
+                minute = '0' + minute
+            }
+            if(secs<10){
+                secs = '0' + secs
+            }
+            if(hour>12){
+                hour = hour - 12
+                ind = 'PM'
+            }
+            else if(hour===0){
+                hour = hour + 12
+            }
+            else{
+                ind ='AM'
+            }
+            // z.innerText = `${hour}:${minute}:${secs} ${ind}`
+            timer
+        },1000)
+    }
+    // timer()
+</script>
+<!-- <script>
+    let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+    scanner.addListener('scan', function (content) {
+    console.log(content);
+    });
+    Instascan.Camera.getCameras().then(function (cameras) {
+    if (cameras.length > 0) {
+        scanner.start(cameras[0]);
+    } else {
+        console.error('No cameras found.');
+    }
+    }).catch(function (e) {
+    console.error(e);
+    });
+    let audio = new Audio('/audio/nots.mp3')
+    scanner.addListener('scan',function(c){
+        audio.play()
+        document.querySelector('#qrText').value = c
+        setTimeout(()=>{
+            document.querySelector('#qrText').value = ""
+        },5000)
+    })
+</script> -->
+</body>
+</html>

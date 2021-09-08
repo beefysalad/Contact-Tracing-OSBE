@@ -1,0 +1,205 @@
+<%- include('../partials/header') %> 
+<title>Document</title>
+<style>
+    .main{
+        margin-top: 8em;
+    }
+    .left-content{
+        padding: 25px;
+        box-shadow: 2px 2px 15px black;
+        min-height: 500px;
+        height: 100%;
+        width: 750px;
+        transition: width 0.2s;
+    }
+    .right-content{
+        margin-left: -15px;
+    }
+    .formz{
+        padding: 20px;
+    }
+    .but{
+        transition: 0.2s;
+    }
+    .but:hover,.but:focus{
+        transform: translateY(-0.25em);
+    }
+    hr{
+        color: white;
+    }
+    a{
+        text-decoration: none;
+    }
+    .second-page{
+        display: none;
+    }
+    @media (max-width:1398px){
+        .right-content{
+            display: none;
+        }
+        .left-content{
+            margin: 0 auto;
+            width: 700px;
+        }
+    }
+    @media (max-width:400px){
+       .left-content{
+           padding: 20px;
+           max-width: 340px;
+       }
+       .formz{
+           padding: 15px;
+       }
+   }
+    
+</style>
+</head>
+<body class="d-flex flex-column vh-100 bg-warning">
+<div class="container">
+    <div class="row main">
+        <div class="col-md-7 left-content bg-dark">
+            <h4 class="text-light text-center mt-3">Welcome back!</h4>
+            <form action="/client-register" method="POST">
+                <div class="container">
+                    <div class="row formz">
+                        <div class="col-md-6 mt-4 first-page">
+                            <label for="firstName" class="form-label text-light">First Name</label>
+                            <input type="text" name="firstName" id="firstName" class="form-control" required placeholder="First Name">
+                        </div>
+                        <div class="col-md-6 mt-4 first-page">
+                            <label for="lastName" class="form-label text-light">Last Name</label>
+                            <input type="text" name="lastName" id="lastName" class="form-control" required placeholder="Last Name">
+                        </div>
+                        <div class="col-md-6 mt-4 first-page">
+                            <% if (messages.error) { %>
+                                <label class="form-label text-danger" for="username"><%= messages.error %> </label>
+                            <% } else{ %>
+                                <label class="form-label text-light" for="username">Username</label>
+                            <% }%>
+                            <input type="text" name="username" id="username" class="form-control" placeholder="Username" required>
+                        </div>
+                        
+                        <div class="col-md-6 mt-4 first-page">
+                            <label for="birthDate" class="form-label text-light">Birth Date</label>
+                            <input type="date" name="birthDate" id="birthDate" class="form-control" required>
+                        </div>
+                        <div class="col-md-12 mt-4 first-page">
+                            <label class="form-label text-light" for="address">Home Address</label>
+                            <input type="text" name="address" id="address" class="form-control" required placeholder="Home Address">
+                        </div>
+                        <div class="col-md-12 mt-4 second-page">
+                            <label for="emailAddress" class="form-label text-light">Email Address</label>
+                            <input type="email" name="emailAddress" id="emailAddress" class="form-control" required placeholder="Email Address">
+                        </div>
+                        <div class="col-md-6 mt-4 second-page">
+                            <label for="contactNumber" class="form-label text-light">Contact Number</label>
+                            <input type="number" name="contactNumber" id="contactNumber" class="form-control" required placeholder="Contact Number">
+                        </div>
+                        <div class="col-md-6 mt-4 second-page">
+                            <label class="form-label text-light" for="gender">Gender</label>
+                            <select required id="gender" name="gender" class="form-select" aria-label="Default select example">
+                                <option  value="" selected disabled hidden>Select a gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Others">Others</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mt-4 second-page">
+                            <label class="form-label text-light" for="password">Password</label>
+                            <input class="form-control" type="password" name="password" id="password" required placeholder="Password">
+                        </div>
+                        <div class="col-md-6 mt-4 second-page">
+                            <label class="form-label text-light" for="cpassword">Confirm Password</label>
+                            <input class="form-control" type="password" name="cpassword" id="cpassword" required placeholder="Confirm password">
+                        </div>
+                       
+                        
+                    </div>
+                    <div class="row px-4">
+                        <button class="mt-3 btn btn-success but submit px-5" style="display: none;">Register</button>
+                    </div>
+                    
+                </div>
+            </form>
+            <div class="container px-5">
+                <div class="row">
+                    <button class="btn btn-primary mt-2 but nxt" disabled>Next Page</button>
+                </div>
+            </div>
+            <!-- <div class="container px-5">
+                <div class="row">
+                    <button class="btn btn-danger mt-2 but prev" style="display: none;">Go Back</button>
+                </div>
+            </div> -->
+            
+        </div>
+        <div class="col-md-5 right-content">
+            <img src="images/test.png" alt="logo" style="height: 100%;">
+        </div>
+    </div>
+</div>
+<script>
+
+
+       
+       
+</script>
+
+<script>
+    const next = document.querySelector('.nxt')
+    const prev = document.querySelector('.prev')
+    const submit = document.querySelector('.submit')
+    const firstPages = document.querySelectorAll('.first-page')
+    const secondPages = document.querySelectorAll('.second-page')
+    
+    setInterval(()=>{
+        if(firstPages[0].children[1].value!=='' && 
+        firstPages[1].children[1].value!=='' && 
+        firstPages[2].children[1].value!=='' &&
+        firstPages[3].children[1].value!=='' &&
+        firstPages[4].children[1].value!==''){
+            next.disabled = false
+        }
+        else{
+            next.disabled = true
+        }
+        
+    },1000)
+    next.addEventListener('click',()=>{
+        for(let i=0; i<firstPages.length; i++){
+            
+            submit.style.display='inline'
+            next.style.display='none'
+            // prev.style.display='inline'
+            firstPages[i].style.display ='none'
+            secondPages[i].style.display ='inline'
+        }
+    })
+    const password = document.querySelector('#password'),
+        cpassword = document.querySelector('#cpassword')
+        const username = document.querySelector('#username'),
+        form = document.querySelector('form')
+        cpassword.addEventListener('keyup',(e)=>{
+
+        if(cpassword.value==password.value){
+            cpassword.setCustomValidity('')
+        }
+        else{
+            cpassword.setCustomValidity('Passwords do not match')
+        }
+            cpassword.reportValidity()
+        })
+    // prev.addEventListener('click',()=>{
+    //     for(let i=0; i<firstPages.length; i++){
+    //         submit.style.display='none'
+    //         next.style.display='inline'
+    //         prev.style.display='none'
+    //         firstPages[i].style.display ='inline'
+    //         secondPages[i].style.display ='none'
+    //     }
+    // })
+    
+</script>
+<%- include('../partials/footer') %> 
+</body>
+</html>

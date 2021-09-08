@@ -1,0 +1,113 @@
+    <%- include('../partials/header') %> 
+    <title>Document</title>
+    <style>
+        .main{
+            margin-top: 8em;
+        }
+        .left-content{
+            padding: 25px;
+            box-shadow: 2px 2px 15px black;
+            height: 500px;
+            width: 750px;
+            transition: width 0.2s;
+        }
+        .right-content{
+            margin-left: -15px;
+        }
+        .formz{
+            padding: 20px;
+        }
+        .but{
+            transition: 0.2s;
+        }
+        .but:hover,.but:focus{
+            transform: translateY(-0.25em);
+        }
+        hr{
+            color: white;
+        }
+        a{
+            text-decoration: none;
+        }
+        @media (max-width:1398px){
+            .right-content{
+                display: none;
+            }
+            .left-content{
+                margin: 0 auto;
+                width: 700px;
+            }
+        }
+        @media (max-width:400px){
+           .left-content{
+               padding: 20px;
+               max-width: 340px;
+           }
+           .formz{
+               padding: 15px;
+           }
+       }
+        
+    </style>
+</head>
+<body class="d-flex flex-column vh-100 bg-warning">
+    <div class="container">
+        <div class="row main">
+            <div class="col-md-5 right-content">
+                <img src="images/banner.jpg" alt="logo" style="height: 91%;">
+            </div>
+            <div class="col-md-7 left-content bg-dark">
+                <h4 class="text-light text-center mt-3">Welcome back!</h4>
+                <form action="/client-login" method="POST">
+                    <div class="container">
+                        <div class="row d-flex justify-content-center flex-column formz">
+                            <% if (messages.error) { %>
+                                <h4 class="text-danger"><%= messages.error %> </h4>
+                            <% } %>
+                            
+                            <div class="col mt-4">
+                                <label for="username" class="form-label text-light">Username</label>
+                                <input class="form-control" type="text" name="username" id="username" placeholder="Username" required>
+                            </div>
+                            <div class="col mt-4">
+                                <label for="password" class="form-label text-light">Password</label>
+                                <input class="form-control" type="password" name="password" id="password" placeholder="Password" required>
+                            </div>
+                            <div class="form-check col mt-4 mx-3">
+                                <input class="form-check-input" type="checkbox" name="shp" value="ah" id="shp">
+                                <label class="form-check-label text-light" for="shp">Show Password</label>
+                            </div>
+                            <button class="btn btn-primary mt-3 but">Log-in</button>
+                            <hr class="mt-4">
+                            <div class="form-text text-center">
+                                Dont have an account yet? <a href="/client-register">Sign up</a>
+                            </div>
+                            <div class="form-text text-center">
+                                <a href="#">Forgot Password</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+    <%- include('../partials/footer') %> 
+    <script>
+        const shp = document.querySelector('#shp')
+        const password = document.querySelector('#password')
+        shp.value = 'on'
+        shp.addEventListener('change',()=>{
+            if(shp.value==='on'){
+                password.setAttribute('type','text')
+               
+                shp.value='off'
+            }else if(shp.value==='off'){
+                password.setAttribute('type','password')
+               
+                shp.value='on'
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<%- include('../partials/header') %> 
+<title>QR</title>
+<style>
+
+    .child{
+        text-align:center;
+        margin:0 auto;
+        top:50%;
+        transform: translateY(-50%);  /* There are also browser-specific calls for the translate property */
+        
+    }
+    .back{
+        text-align:center;
+        margin: 0 auto;
+    }
+</style>
+</head>
+
+<body class="d-flex flex-column vh-100 bg-warning">
+<div class="container cont bg-dark mt-5">
+    <h1 class="text-center text-light">QR code generator</h1>
+    <p class="text-light text-center form-text">Present this QR code upon entering establishments using our application and you will automatically be logged</p>
+    <p class="form-text text-center">Note: ios users cannot download using the button, taking a screenshot is the alternative method</p>
+    <div class="row">
+        <div class="col">
+            <!-- <label class="form-label text-light" for="qrText">Users Unique ID to be stored in QR (picturi ang qr code using your phone nya mao to imo gamiton inig scan)</label> -->
+            
+            <input readonly value="<%=id%>" required placeholder="Input Text" class="dod form-control" type="text" name="qrText" id="qrText" style="display: none;">
+        </div>
+        <div class="">
+            <canvas style="display: block;" class="mx-auto" height="200" width="200" id="qrCode"></canvas>
+        </div>
+        
+    </div>
+    <div class="child mt-5 ptr">
+        <button class="btn-primary btn">Download QR Code</button>
+    </div>
+    <div class="back">
+        <a href="/client-login" class="btn btn-success">Back</a>
+    </div>
+   
+    
+    
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+<script>
+    let qr
+    
+    (function (){
+        qr = new QRious({
+            element: document.querySelector('#qrCode'),
+            value: document.querySelector('.dod').value,
+            padding: 10,
+            
+            size:200
+        })
+    })()
+
+    const button = document.querySelector('.ptr')
+    button.addEventListener('click',()=>{
+    let canvas = document.querySelector('#qrCode')
+        img = canvas.toDataURL("image/jpeg")
+        axios({
+            url: img,
+            method: 'GET',
+            responseType: 'blob',
+            padding: 225,
+        })
+        .then((response) => {
+         const url = window.URL
+         .createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'QRCode.png');
+                document.body.appendChild(link);
+                link.click();
+        })
+
+})
+</script>
+<%- include('../partials/footer') %>
+</body>
+</html>
