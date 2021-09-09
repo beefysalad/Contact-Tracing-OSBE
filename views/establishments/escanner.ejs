@@ -56,8 +56,6 @@
 </style>
 </head>
 <body class="d-flex flex-column v">
-
-<!-- <h1 class="time text-center text-primary"></h1> -->
     <% if (messages.success) { %>
         
      <h1 class="text-center text-primary dis"><%= messages.success %> </h1>
@@ -66,16 +64,15 @@
      <h1 class="text-danger text-center dis"><%= messages.error %> </h1>
     <% } %>
     <div class="container bg-primary cont mt-5 d-flex flex-column">
-        <p class="text-center lead">Align your QR Code infront of the scanner para ma dodong</p>
+        <p class="text-center lead">Align your QR Code infront of the scanner</p>
         <video id="preview"></video>
         <label id="qrt" class="form-label text-warning" for="qrText">Users Unique ID</label>
         <form action="/give-qr" method="POST" id="uniqueid">
             <input type="text" name="qrText" id="qrText" class="form-control" readonly required>
         </form>
-        
     </div>
     <div class="container bg-danger testz mt-5">
-        <p class="text-center lead">Align your QR Code infront of the scanner para ma dodong</p>
+        <p class="text-center lead">TO-DO PANI DIRI PERO ESSENTIALLY MUGAWAS ANG PICTURE(IF NAA) AND DETAILS SA USER IF MA SCAN SILA </p>
         <% if (messages.info) { %>
             <img src="/uploads/images/<%= messages.info %>" alt="" class="yawa"> 
         <% } %>
@@ -118,28 +115,5 @@
     }
     // timer()
 </script>
-<!-- <script>
-    let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
-    scanner.addListener('scan', function (content) {
-    console.log(content);
-    });
-    Instascan.Camera.getCameras().then(function (cameras) {
-    if (cameras.length > 0) {
-        scanner.start(cameras[0]);
-    } else {
-        console.error('No cameras found.');
-    }
-    }).catch(function (e) {
-    console.error(e);
-    });
-    let audio = new Audio('/audio/nots.mp3')
-    scanner.addListener('scan',function(c){
-        audio.play()
-        document.querySelector('#qrText').value = c
-        setTimeout(()=>{
-            document.querySelector('#qrText').value = ""
-        },5000)
-    })
-</script> -->
 </body>
 </html>

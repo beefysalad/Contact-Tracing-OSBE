@@ -108,27 +108,10 @@ function isLoggedin(req,res,next){
         if(req.user instanceof Establishment){
             return next()
         }
-        // else if(req.user instanceof User){
-            
-        //     // console.log('HALA YAWA NISUD KA DIRI DODONG');
-        // }
-        
     }
     req.flash('error',{message: 'You are currently logged in!'})
     res.redirect('/')
-    // res.redirect('/establishments-login')
-    // if(req.user instanceof Establishment){
-       
-    //     // console.log('YAWA');
-    // }else if(req.user instanceof User){
-    //     if(req.isAuthenticated()){
-    //         return next()
-    //     }
-    //     res.redirect('/client-login')
-    //     // console.log('YAWA2');
-    // }
-    // res.redirect('/')
-    
+ 
 }
 function isLoggedOut(req,res,next){
     if(!req.isAuthenticated()){
@@ -205,8 +188,6 @@ app.post('/give-qr',(req,res)=>{
     User.findById(req.body.qrText,(err,user)=>{
         if(user){
             req.flash('success',`Welcome ${user.firstName} ${user.lastName}`)
-            // req.flash('success','https://devops.com/wp-content/uploads/2020/04/Shift-Right-Testing-_TestOps-1280x720.jpg')
-
             req.flash('info', user.image)
             const date = new Date()
             console.log(`${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
@@ -250,8 +231,6 @@ app.post('/eregister',(req,res)=>{
     })
 })
 //ROUTE FOR CLIENT
-
-
 app.get('/change-picture/:id',isLoggedinU,(req,res)=>{
     const {id} = req.params
     console.log(`get id :${id}`);
@@ -267,13 +246,6 @@ app.post('/change-picture/:id',upload.single('image'),isLoggedinU,(req,res)=>{
             console.log('Success yawa');
             res.redirect('/client-dashboard')
         })
-    // User.updateOne({id:id},{$set:{image:req.file.filename}})
-    //     .then(data=>{
-    //         console.log(`data is ${data}`);
-    //         console.log(data);
-    //         console.log('Success in changing picture');
-    //         res.redirect('/client-dashboard')
-    //     })
 })
 app.get('/logoutU',(req,res)=>{
     req.logOut()
@@ -347,9 +319,6 @@ app.post('/client-register',(req,res)=>{
         }
     })
 })
-
-
-
 app.listen(port,()=>{
     console.log(`Listening to port ${port}`);
 })
