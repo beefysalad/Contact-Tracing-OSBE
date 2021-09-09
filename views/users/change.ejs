@@ -1,0 +1,11 @@
+    <%- include('../partials/header') %> 
+    <title>Document</title>
+</head>
+<body>
+    <form action="/change-picture/<%=id%> " method="POST" enctype="multipart/form-data">
+        <label for="image" class="form-label">Image</label>
+        <input type="file" name="image" id="image" class="form-control" required>
+        <button class="btn btn-warning">Edit Picture</button>
+    </form>
+</body>
+</html>

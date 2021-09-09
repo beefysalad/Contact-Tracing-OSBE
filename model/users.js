@@ -42,6 +42,10 @@ const userSchema = new Schema({
     dateOfRegistration:{
         type:String,
         required: true
+    },
+    image:{
+        data: Buffer,
+        type: String
     }
 })
 

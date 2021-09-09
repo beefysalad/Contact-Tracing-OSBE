@@ -7,8 +7,10 @@
         .left-content{
             padding: 25px;
             box-shadow: 2px 2px 15px black;
-            height: 500px;
-            width: 750px;
+            /* height: 500px; */
+            max-height: 500px;
+            height: 100%;
+            width: 760px;
             transition: width 0.2s;
         }
         .right-content{
@@ -64,8 +66,7 @@
                             <% if (messages.error) { %>
                                 <h4 class="text-danger"><%= messages.error %> </h4>
                             <% } %>
-                            
-                            <div class="col mt-4">
+                            <div class="col">
                                 <label for="username" class="form-label text-light">Username</label>
                                 <input class="form-control" type="text" name="username" id="username" placeholder="Username" required>
                             </div>

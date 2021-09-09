@@ -2,6 +2,9 @@
     <title>Main Dashboard</title>
 </head>
 <body class="d-flex flex-column vh-100">
+    <% if (messages.error) { %>
+        <h5 class="text-danger text-center">You are currently logged in!</h5>
+    <% } %>
     <h1 class="text-center text-primary">Welcome to the main dashboard</h1>
     <div class="text-center">
         <a href="/establishments-login" class="text-center">Go to Establishment Portal</a>

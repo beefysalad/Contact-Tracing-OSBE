@@ -12,20 +12,37 @@ const mongoose = require('mongoose')
 const User = require('./model/users')
 const Establishment = require('./model/establishments')
 const methodOverride = require('method-override')
+const multer = require('multer')
+const { readdirSync } = require('fs')
 console.clear()
-
-
-//DATABASE
-// mongoose.connect('mongodb://localhost:27017/final_test', {
-//     useNewUrlParser: true, 
-//     useUnifiedTopology: true,
+//MULTER FOR STORAGING IMAGE
+const storage = multer.diskStorage({
     
-// })
-mongoose.connect('mongodb+srv://patrick123:johnpatrick@cluster0.udls2.mongodb.net/Contact-Tracing-Application?retryWrites=true&w=majority', {
+    destination:(req,file,callback)=>{
+        callback(null,'./public/uploads/images')
+    },
+    filename:(req,file,callback)=>{
+        const ext = file.mimetype.split("/")[1]
+        callback(null,Date.now() + file.originalname)
+    }
+})
+const upload = multer({
+    storage: storage,
+    limits:{
+        fileSize: 1024*1024*3
+    }
+})
+//DATABASE
+mongoose.connect('mongodb://localhost:27017/final_test', {
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     
 })
+// mongoose.connect('mongodb+srv://patrick123:johnpatrick@cluster0.udls2.mongodb.net/Contact-Tracing-Application?retryWrites=true&w=majority', {
+//     useNewUrlParser: true, 
+//     useUnifiedTopology: true,
+    
+// })
 const db = mongoose.connection
 db.on("error",console.error.bind(console,"connection error"))
 db.once("open",()=>{
@@ -46,7 +63,7 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-//PASSPORT STRATEGY, AUTHENTICATION AND AUTHORIZATION
+// PASSPORT STRATEGY, AUTHENTICATION AND AUTHORIZATION
 passport.use('elogin',new localStrategy(function(username,password,done){
     Establishment.findOne({username:username},(err,user)=>{
         if(err) return done(err)
@@ -61,19 +78,57 @@ passport.use('elogin',new localStrategy(function(username,password,done){
 passport.use(new localStrategy(function(username,password,done){
     User.findOne({username:username},(err,user)=>{
         if(err) return done(err)
-        if(!user) return done(null,false,{message:'Invalid username or password!'})
+        console.log(`passed username from clogin is : ${username}`);
+        if(!user) return done(null,false,{message:'Invalid username or password d!'})
         bcrypt.compare(password,user.password,(err,res)=>{
             if(err) return done(err)
-            if(res==false) return done(null,false,{message:'Invalid username or password!'})
+            if(res==false) return done(null,false,{message:'Invalid username or password d!'})
             return done(null,user)
         })
     })
 }))
-function isLoggedin(req,res,next){
+function isLoggedinU(req,res,next){
     if(req.isAuthenticated()){
+        if(req.user instanceof User){
+            return next()
+        }
+       
+    }
+    req.flash('error',{message: 'You are currently logged in!'})
+    res.redirect('/')
+}
+function isLoggedOutU(req,res,next){
+    if(!req.isAuthenticated()){
         return next()
     }
-    res.redirect('/establishments-login')
+    res.redirect('/client-dashboard')
+}
+function isLoggedin(req,res,next){
+    if(req.isAuthenticated()){
+        if(req.user instanceof Establishment){
+            return next()
+        }
+        // else if(req.user instanceof User){
+            
+        //     // console.log('HALA YAWA NISUD KA DIRI DODONG');
+        // }
+        
+    }
+    req.flash('error',{message: 'You are currently logged in!'})
+    res.redirect('/')
+    // res.redirect('/establishments-login')
+    // if(req.user instanceof Establishment){
+       
+    //     // console.log('YAWA');
+    // }else if(req.user instanceof User){
+    //     if(req.isAuthenticated()){
+    //         return next()
+    //     }
+    //     res.redirect('/client-login')
+    //     // console.log('YAWA2');
+    // }
+    // res.redirect('/')
+    
 }
 function isLoggedOut(req,res,next){
     if(!req.isAuthenticated()){
@@ -84,29 +139,31 @@ function isLoggedOut(req,res,next){
 
 passport.serializeUser(function(user,done){
     if(user instanceof Establishment){
-        // console.log('Establishment account ni siya chuy');
+        console.log('Establishment account ni siya chuy');
         // console.log(user.id);
         done(null,{id: user.id, type: 'Establishment'})
-    }else{
-        // console.log('Client account ni siya chuy');
+    }else if(user instanceof User){
+        console.log('Client account ni siya chuy');
         // console.log(user.id);
         done(null,{id: user.id, type:'Client'})
     }
 })
 passport.deserializeUser(function(id,done){
-    // console.log(id.type);
+   
     if(id.type==='Establishment'){
-       Establishment.findOne({id:id},function(err,user){
+       Establishment.findById(id.id,function(err,user){
            if(user){
+           
                done(null,user)
            }else{
                done(err)
            }
        })
     }
-    else{
-        User.findOne({id:id},function(err,client){
+    else if(id.type==='Client'){
+        User.findById(id.id,function(err,client){
             if(client){
+           
                 done(null,client)
             }else{
                 done(err)
@@ -117,7 +174,7 @@ passport.deserializeUser(function(id,done){
 
 //ROUTES
 //ROUTE FOR MAIN
-app.get('/',isLoggedOut,isLoggedOutU,(req,res)=>{
+app.get('/',(req,res)=>{
     res.render('main/maindash')
 })
 //ROUTE FOR ESTABLISHMENTS
@@ -131,7 +188,9 @@ app.get('/establishments-registration',isLoggedOut,(req,res)=>{
     res.render('establishments/eregister')
 })
 app.get('/establishments-dashboard',isLoggedin,(req,res)=>{
-    res.render('establishments/edashboard')
+    // console.log(req.user);
+    const user = req.user
+    res.render('establishments/edashboard',{user})
 })
 app.get('/logoutE',(req,res)=>{
     req.logOut()
@@ -147,7 +206,8 @@ app.post('/give-qr',(req,res)=>{
         if(user){
             req.flash('success',`Welcome ${user.firstName} ${user.lastName}`)
             // req.flash('success','https://devops.com/wp-content/uploads/2020/04/Shift-Right-Testing-_TestOps-1280x720.jpg')
-            req.flash('info','https://devops.com/wp-content/uploads/2020/04/Shift-Right-Testing-_TestOps-1280x720.jpg')
+
+            req.flash('info', user.image)
             const date = new Date()
             console.log(`${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
             res.redirect('/establishments-scanqr')
@@ -191,19 +251,30 @@ app.post('/eregister',(req,res)=>{
 })
 //ROUTE FOR CLIENT
 
-function isLoggedinU(req,res,next){
-    if(req.isAuthenticated()){
-        return next()
-    }
-    res.redirect('/client-login')
-}
-function isLoggedOutU(req,res,next){
-    if(!req.isAuthenticated()){
-        return next()
-    }
-    res.redirect('/client-dashboard')
-}
 
+app.get('/change-picture/:id',isLoggedinU,(req,res)=>{
+    const {id} = req.params
+    console.log(`get id :${id}`);
+    res.render('users/change',{id})
+})
+app.post('/change-picture/:id',upload.single('image'),isLoggedinU,(req,res)=>{
+    const {id} = req.params
+    // console.log(req.file);
+    console.log(`post id:${id}`);
+    console.log(req.file.filename);
+    User.findByIdAndUpdate(id,{image:req.file.filename})
+        .then(data=>{
+            console.log('Success yawa');
+            res.redirect('/client-dashboard')
+        })
+    // User.updateOne({id:id},{$set:{image:req.file.filename}})
+    //     .then(data=>{
+    //         console.log(`data is ${data}`);
+    //         console.log(data);
+    //         console.log('Success in changing picture');
+    //         res.redirect('/client-dashboard')
+    //     })
+})
 app.get('/logoutU',(req,res)=>{
     req.logOut()
     res.redirect('/client-login')
@@ -215,20 +286,31 @@ app.get('/client-register',isLoggedOutU,(req,res)=>{
     res.render('users/uregister')
 })
 app.get('/client-dashboard',isLoggedinU,(req,res)=>{
-    res.render('users/udashboard')
+    const user = req.user
+    // console.log(`user logged in is ${req.user}`);
+    res.render('users/udashboard',{user})
 })
 app.post('/client-login',passport.authenticate('local',{
     successRedirect: '/client-dashboard',
     failureRedirect: '/client-login',
     failureFlash: true
-}))
+}
+))
 app.get('/client-qr/:id',(req,res)=>{
     const {id} = req.params
     res.render('users/uqr', {id})
 })
 app.post('/client-register',(req,res)=>{
-    
     const{firstName,lastName,username,birthDate,address,emailAddress,contactNumber,gender,password} = req.body
+    let genPic
+    if(gender==='Male'){
+        // console.log('nisud sa male');
+        genPic = 'defaultmale.jpg'
+    }else if(gender==='Female'){
+        // console.log('nisud sa female');
+        genPic = 'defaultfemale.png'
+    }
+    
     User.findOne({username:username},(err,user)=>{
         if(user){
             req.flash('error','Username already taken!')
@@ -250,12 +332,13 @@ app.post('/client-register',(req,res)=>{
                         gender: gender,
                         username:username,
                         password: hash,
+                        image: genPic,
                         dateOfRegistration: `${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
                     })
                     let id
                     await newUser.save()
                         .then(data=>{
-                            console.log('Successfully added an establishment user!');
+                            console.log('Successfully added a client user user!');
                             id = data._id
                         })
                     res.redirect(`/client-qr/${id}`)

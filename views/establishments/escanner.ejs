@@ -10,7 +10,11 @@
     .testz{
             width: 600px;
             height: 500px;
-        }
+    }
+    .yawa{
+        width: 100px;
+        height: 100px;
+    }
     #preview{
         position: relative;
         min-width: 100%;
@@ -73,7 +77,7 @@
     <div class="container bg-danger testz mt-5">
         <p class="text-center lead">Align your QR Code infront of the scanner para ma dodong</p>
         <% if (messages.info) { %>
-            <img src="<%= messages.info %> " alt="" class="img-fluid"> 
+            <img src="/uploads/images/<%= messages.info %>" alt="" class="yawa"> 
         <% } %>
     </div>
 

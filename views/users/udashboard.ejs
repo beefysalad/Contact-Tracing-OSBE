@@ -1,14 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('../partials/header') %> 
     <title>Document</title>
+    <style>
+        .test{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-color: red;
+            max-width: 500px;
+            min-height: 500px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
+    <h1>welcome! <%= user.firstName %> <%= user.lastName %> </h1>
     <form action="/logoutU">
         <button class="btn btn-warning">Log out</button>
     </form>
+    <div class="test">
+       <img src="/uploads/images/<%=user.image%> " alt="test" class="img-fluid"> 
+    </div>
+    
+    <a href="/change-picture/<%=user._id %> " class="btn btn-warning">Edit Picture</a>
 </body>
 </html>

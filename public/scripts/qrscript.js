@@ -28,7 +28,7 @@ Instascan.Camera.getCameras()
             document.querySelector('#qrText').value = c
             setTimeout(()=>{
                 document.forms["uniqueid"].submit()
-            },1000)
+            },500)
             
             // setTimeout(()=>{
                 
