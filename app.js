@@ -32,7 +32,7 @@ db.once("open",()=>{
     console.log('Database connected')
 })
 
-//MIDDLWARES
+//MIDDLEWARES
 app.use(flash())
 app.set('view engine', 'ejs');
 app.set('views',path.join(__dirname,'/views'));
@@ -46,7 +46,7 @@ app.use(session({
 app.use(passport.initialize())
 app.use(passport.session())
 
-//PASSPORT STRATEGY AND AUTHENTICATION AND AUTHORIZATION
+//PASSPORT STRATEGY, AUTHENTICATION AND AUTHORIZATION
 passport.use('elogin',new localStrategy(function(username,password,done){
     Establishment.findOne({username:username},(err,user)=>{
         if(err) return done(err)
