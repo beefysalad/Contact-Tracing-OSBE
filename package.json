@@ -17,6 +17,7 @@
     "express-flash": "^0.0.2",
     "express-session": "^1.17.2",
     "method-override": "^3.0.0",
+    "moment": "^2.29.1",
     "mongoose": "^6.0.5",
     "multer": "^1.4.3",
     "passport": "^0.4.1",

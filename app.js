@@ -11,8 +11,10 @@ const path = require('path')
 const mongoose = require('mongoose')
 const User = require('./model/users')
 const Establishment = require('./model/establishments')
+const Log = require('./model/logs')
 const methodOverride = require('method-override')
 const multer = require('multer')
+const moment = require('moment')
 const { readdirSync } = require('fs')
 console.clear()
 //MULTER FOR STORAGING IMAGE
@@ -161,6 +163,17 @@ app.get('/',(req,res)=>{
     res.render('main/maindash')
 })
 //ROUTE FOR ESTABLISHMENTS
+app.get('/establishments-logs/:id',isLoggedin,async (req,res)=>{
+    const {id} = req.params
+    const data = await Log.findOne({_id:id})
+    // let arr = []
+    // for(let i=0; i<data.logs.length; i++){
+    //     arr.push(data.logs[i])
+    //     console.log(arr);
+    // }
+    let currentDate = moment(new Date()).format('MMM DD YYYY')
+    res.render('establishments/elogs',{data,currentDate})
+})
 app.get('/establishments-scanqr',isLoggedin,(req,res)=>{
     res.render('establishments/escanner')
 })
@@ -189,8 +202,13 @@ app.post('/give-qr',(req,res)=>{
         if(user){
             req.flash('success',`Welcome ${user.firstName} ${user.lastName}`)
             req.flash('info', user.image)
+            let fullName = `${user.firstName} ${user.lastName}`
             const date = new Date()
-            console.log(`${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
+            // console.log(`${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
+            Log.updateOne({_id:req.user._id},{$push:{logs:[{id:user._id,date:moment(new Date()).format('MMM DD YYYY'),time:moment(new Date()).format('hh:mm:ss A'),name:fullName}]}})
+                .then(data=>{
+                    // console.log(data);
+                })
             res.redirect('/establishments-scanqr')
         }else{
             req.flash('error','User does not exist!')
@@ -223,6 +241,11 @@ app.post('/eregister',(req,res)=>{
                     await newEstablish.save()
                         .then(data=>{
                             console.log('Successfully added an establishment user!');
+                            Log.insertMany([
+                                {_id:data._id}
+                            ]).then(data=>{
+                                console.log('successfully added a log');
+                            })
                         })
                     res.redirect('/establishments-login')
                 })
