@@ -15,67 +15,134 @@
      
     </style>
 </head>
-<body>
-    <h5 class="display-5 text-center text-primary">Logs for <%=currentDate%> </h5>
-    <div class="container">
-        <table class="table table-dark table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col"></th>
-                    <th scope="col">First Name</th>
-                    <th scope="col">Last Name</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Time in</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% if (data && arr) { %>
-                    <% for( let index = 0; index < data.logs.length; index++ ) { %>
-                            <!-- put condition here to check if theyre logged on the current date -->
-                            <tr>
-                                <td class="current_logs"> <b><%= index+1 %></b> </td>
-                                <td class="current_logs"><img class="control" src="/uploads/images/<%=arr[index].image%>" alt=""></td>
-                                <td class="current_logs"><%= arr[index].firstName %> </td>
-                                <td class="current_logs"><%= arr[index].lastName %> </td>
-                                <td class="current_logs"><%= data.logs[index].date %> </td>
-                                <td class="current_logs"><%= data.logs[index].time %> </td>
-                            </tr>
-                        
-                        <!-- <tr>
-                            <td class="all_logs"> <b><%= index+1 %></b> </td>
-                            <td class="all_logs"><img class="control" src="/uploads/images/<%=arr[index].image%>" alt=""></td>
-                            <td class="all_logs"><%= arr[index].firstName %> </td>
-                            <td class="all_logs"><%= arr[index].lastName %> </td>
-                            <td class="all_logs"><%= data.logs[index].date %> </td>
-                            <td class="all_logs"><%= data.logs[index].time %> </td>
-                        </tr> -->
-                    <% } %>
-                <% } %>
-            </tbody>
-        </table>
-        <a href="/establishments-dashboard" class="btn btn-primary">Go Back</a>
+<body class="d-flex flex-column vh-100">
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-dark">
+                <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                    <a href="#" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <span class="fs-5 d-none d-sm-inline">Menu</span>
+                    </a>
+                    <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                        <li class="nav-item">
+                            <a href="/establishments-scanqr" class="nav-link align-middle px-0">
+                                <i class="fs-4 bi-house"></i> <span class="ms-1 d-none d-sm-inline">Home</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-speedometer2"></i> <span class="ms-1 d-none d-sm-inline">Dashboard</span> </a>
+                            <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1 </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2 </a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-table"></i> <span class="ms-1 d-none d-sm-inline">Orders</span></a>
+                        </li>
+                        <li>
+                            <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                                <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-none d-sm-inline">Bootstrap</span></a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-grid"></i> <span class="ms-1 d-none d-sm-inline">Products</span> </a>
+                                <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                                <li class="w-100">
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 1</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 2</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 3</a>
+                                </li>
+                                <li>
+                                    <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 4</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link px-0 align-middle">
+                                <i class="fs-4 bi-people"></i> <span class="ms-1 d-none d-sm-inline">Customers</span> </a>
+                        </li>
+                    </ul>
+                    <hr>
+                    <div class="dropdown pb-4">
+                        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                            <span class="d-none d-sm-inline mx-1">loser</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                            <li><a class="dropdown-item" href="#">New project...</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><a class="dropdown-item" href="#">Profile</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Sign out</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col py-3">
+                <!-- <h5 class="display-5 text-center text-primary">All logs</h5> -->
+                <table class="table table-dark table-striped table-hover" id="example">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col"></th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Time in</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% if (data && arr) { %>
+                            <% for( let index = 0; index < data.logs.length; index++ ) { %>
+                                    <!-- put condition here to check if theyre logged on the current date -->
+                                    <tr>
+                                        <td class="current_logs"> <b><%= index+1 %></b> </td>
+                                        <td class="current_logs"><img class="control" src="/uploads/images/<%=arr[index].image%>" alt=""></td>
+                                        <td class="current_logs"><%= arr[index].firstName %> </td>
+                                        <td class="current_logs"><%= arr[index].lastName %> </td>
+                                        <td class="current_logs"><%= data.logs[index].date %> </td>
+                                        <td class="current_logs"><%= data.logs[index].time %> </td>
+                                    </tr>
+                            <% } %>
+                        <% } %>
+                    </tbody>
+                </table>
+                <a href="/establishments-dashboard" class="btn btn-primary">Go Back</a>
+            </div>
+           
+        </div>
+        
     </div>
-<!--     
-    <button class="btn btn-warning ptr">Show all logs</button>
-    <button class="btn btn-danger crt">View Logs today</button> -->
-    <!-- <script>
-        const button1 = document.querySelector('.ptr')
-        const button2 = document.querySelector('.crt')
-        const all_logs = document.querySelector('.all_logs')
-        const current_logs = document.querySelector('.current_logs')
-        button1.addEventListener('click',()=>{
-            all_logs.style.display = 'table-cell'
-            current_logs.style.display = 'none'
-            button1.style.display='none'
-            button2.style.display='table-cell'
-        })
-        button2.addEventListener('click',()=>{
-            all_logs.style.display = 'none'
-            current_logs.style.display = 'table-cell'
-            button1.style.display='table-cell'
-            button2.style.display='none'
-        })
-    </script> -->
-    </body>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap5.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.1/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable();
+        } );
+    </script>
+</body>
 </html>

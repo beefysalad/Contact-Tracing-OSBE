@@ -15,7 +15,8 @@ const Log = require('./model/logs')
 const methodOverride = require('method-override')
 const multer = require('multer')
 const moment = require('moment')
-const { readdirSync } = require('fs')
+const dotenv = require('dotenv')
+dotenv.config()
 console.clear()
 //MULTER FOR STORAGING IMAGE
 const storage = multer.diskStorage({
@@ -40,7 +41,7 @@ const upload = multer({
 //     useUnifiedTopology: true,
     
 // })
-mongoose.connect('mongodb+srv://patrick123:johnpatrick@cluster0.udls2.mongodb.net/Contact-Tracing-Application?retryWrites=true&w=majority', {
+mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     
