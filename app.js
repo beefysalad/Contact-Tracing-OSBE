@@ -345,6 +345,17 @@ app.post('/client-register',(req,res)=>{
         }
     })
 })
+app.use((req,res)=>{
+    res.status(404).send('TO DO PANI ANG ERROR PAGE PARA SA UNKNOWN ROUTES!')
+})
+app.use((err,req,res,next)=>{
+    console.log('**********************')
+    console.log('********ERROR********')
+    console.log('**********************')
+    console.log(err)
+    res.status(500).send('OH BOY WE GOT AN ERROR')
+})
+
 app.listen(port,()=>{
     console.log(`Listening to port ${port}`);
 })
