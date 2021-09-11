@@ -16,24 +16,38 @@ const methodOverride = require('method-override')
 const multer = require('multer')
 const moment = require('moment')
 const dotenv = require('dotenv')
+const cloudinary = require('cloudinary').v2
+const {CloudinaryStorage} = require('multer-storage-cloudinary')
+
 dotenv.config()
 console.clear()
 //MULTER FOR STORAGING IMAGE
-const storage = multer.diskStorage({
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
+// const storage = multer.diskStorage({
     
-    destination:(req,file,callback)=>{
-        callback(null,'./public/uploads/images')
-    },
-    filename:(req,file,callback)=>{
-        const ext = file.mimetype.split("/")[1]
-        callback(null,Date.now() + file.originalname)
+//     destination:(req,file,callback)=>{
+//         callback(null,'./public/uploads/images')
+//     },
+//     filename:(req,file,callback)=>{
+//         const ext = file.mimetype.split("/")[1]
+//         callback(null,Date.now() + file.originalname)
+//     }
+// })
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params:{
+        folder:"DEV"
     }
 })
 const upload = multer({
     storage: storage,
-    limits:{
-        fileSize: 1024*1024*3
-    }
+    // limits:{
+    //     fileSize: 1024*1024*3
+    // }
 })
 //DATABASE
 // mongoose.connect('mongodb://localhost:27017/final_test', {
@@ -267,7 +281,7 @@ app.post('/change-picture/:id',upload.single('image'),isLoggedinU,(req,res)=>{
     // console.log(req.file);
     // console.log(`post id:${id}`);
     // console.log(req.file.filename);
-    User.findByIdAndUpdate(id,{image:req.file.filename})
+    User.findByIdAndUpdate(id,{image:req.file.path})
         .then(data=>{
             // console.log('Success yawa');
             res.redirect('/client-dashboard')
