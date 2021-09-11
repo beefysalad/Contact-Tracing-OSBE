@@ -80,7 +80,7 @@ passport.use('elogin',new localStrategy(function(username,password,done){
 passport.use(new localStrategy(function(username,password,done){
     User.findOne({username:username},(err,user)=>{
         if(err) return done(err)
-        console.log(`passed username from clogin is : ${username}`);
+        // console.log(`passed username from clogin is : ${username}`);
         if(!user) return done(null,false,{message:'Invalid username or password d!'})
         bcrypt.compare(password,user.password,(err,res)=>{
             if(err) return done(err)
@@ -96,7 +96,7 @@ function isLoggedinU(req,res,next){
         }
        
     }
-    req.flash('error',{message: 'You are currently logged in!'})
+    req.flash('error',{message: 'You have an Invalid session!'})
     res.redirect('/')
 }
 function isLoggedOutU(req,res,next){
@@ -111,7 +111,7 @@ function isLoggedin(req,res,next){
             return next()
         }
     }
-    req.flash('error',{message: 'You are currently logged in!'})
+    req.flash('error',{message: 'You have an Invalid session!'})
     res.redirect('/')
  
 }
@@ -124,11 +124,11 @@ function isLoggedOut(req,res,next){
 
 passport.serializeUser(function(user,done){
     if(user instanceof Establishment){
-        console.log('Establishment account ni siya chuy');
+        // console.log('Establishment account ni siya chuy');
         // console.log(user.id);
         done(null,{id: user.id, type: 'Establishment'})
     }else if(user instanceof User){
-        console.log('Client account ni siya chuy');
+        // console.log('Client account ni siya chuy');
         // console.log(user.id);
         done(null,{id: user.id, type:'Client'})
     }
@@ -166,13 +166,15 @@ app.get('/',(req,res)=>{
 app.get('/establishments-logs/:id',isLoggedin,async (req,res)=>{
     const {id} = req.params
     const data = await Log.findOne({_id:id})
-    // let arr = []
-    // for(let i=0; i<data.logs.length; i++){
-    //     arr.push(data.logs[i])
-    //     console.log(arr);
-    // }
+    let arr = []
+    data.logs.reverse()
+    // , datalogs = data.logs.reverse()
+    for(let i=0; i<data.logs.length; i++){
+        const d = await User.findOne({_id:data.logs[i].id})
+        arr.push(d)
+    }
     let currentDate = moment(new Date()).format('MMM DD YYYY')
-    res.render('establishments/elogs',{data,currentDate})
+    res.render('establishments/elogs',{data,currentDate,arr})
 })
 app.get('/establishments-scanqr',isLoggedin,(req,res)=>{
     res.render('establishments/escanner')
@@ -256,17 +258,17 @@ app.post('/eregister',(req,res)=>{
 //ROUTE FOR CLIENT
 app.get('/change-picture/:id',isLoggedinU,(req,res)=>{
     const {id} = req.params
-    console.log(`get id :${id}`);
+    // console.log(`get id :${id}`);
     res.render('users/change',{id})
 })
 app.post('/change-picture/:id',upload.single('image'),isLoggedinU,(req,res)=>{
     const {id} = req.params
     // console.log(req.file);
-    console.log(`post id:${id}`);
-    console.log(req.file.filename);
+    // console.log(`post id:${id}`);
+    // console.log(req.file.filename);
     User.findByIdAndUpdate(id,{image:req.file.filename})
         .then(data=>{
-            console.log('Success yawa');
+            // console.log('Success yawa');
             res.redirect('/client-dashboard')
         })
 })

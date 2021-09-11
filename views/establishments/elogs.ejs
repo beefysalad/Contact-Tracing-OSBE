@@ -1,18 +1,81 @@
     <%- include('../partials/header') %> 
     <title>Document</title>
+    <style>
+        .control{
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        .all_logs{
+            display: none;
+        }
+        .crt{
+            display: none;
+        }
+     
+    </style>
 </head>
 <body>
-    <% if (data) { %>
-        <ul>
-            <% for( let index = 0; index < data.logs.length; index++ ) { %>
-                <% if (data.logs[index].date === currentDate) { %>
-                    <li><%= data.logs[index].name%>  - <%= data.logs[index].date%> - <%= data.logs[index].time%>  </li>
+    <h5 class="display-5 text-center text-primary">Logs for <%=currentDate%> </h5>
+    <div class="container">
+        <table class="table table-dark table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col"></th>
+                    <th scope="col">First Name</th>
+                    <th scope="col">Last Name</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time in</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (data && arr) { %>
+                    <% for( let index = 0; index < data.logs.length; index++ ) { %>
+                            <!-- put condition here to check if theyre logged on the current date -->
+                            <tr>
+                                <td class="current_logs"> <b><%= index+1 %></b> </td>
+                                <td class="current_logs"><img class="control" src="/uploads/images/<%=arr[index].image%>" alt=""></td>
+                                <td class="current_logs"><%= arr[index].firstName %> </td>
+                                <td class="current_logs"><%= arr[index].lastName %> </td>
+                                <td class="current_logs"><%= data.logs[index].date %> </td>
+                                <td class="current_logs"><%= data.logs[index].time %> </td>
+                            </tr>
+                        
+                        <!-- <tr>
+                            <td class="all_logs"> <b><%= index+1 %></b> </td>
+                            <td class="all_logs"><img class="control" src="/uploads/images/<%=arr[index].image%>" alt=""></td>
+                            <td class="all_logs"><%= arr[index].firstName %> </td>
+                            <td class="all_logs"><%= arr[index].lastName %> </td>
+                            <td class="all_logs"><%= data.logs[index].date %> </td>
+                            <td class="all_logs"><%= data.logs[index].time %> </td>
+                        </tr> -->
+                    <% } %>
                 <% } %>
-                
-            <% } %>
-        </ul>
-     
-    <% } %>
-    <p><%= currentDate %> </p>
-</body>
+            </tbody>
+        </table>
+        <a href="/establishments-dashboard" class="btn btn-primary">Go Back</a>
+    </div>
+<!--     
+    <button class="btn btn-warning ptr">Show all logs</button>
+    <button class="btn btn-danger crt">View Logs today</button> -->
+    <!-- <script>
+        const button1 = document.querySelector('.ptr')
+        const button2 = document.querySelector('.crt')
+        const all_logs = document.querySelector('.all_logs')
+        const current_logs = document.querySelector('.current_logs')
+        button1.addEventListener('click',()=>{
+            all_logs.style.display = 'table-cell'
+            current_logs.style.display = 'none'
+            button1.style.display='none'
+            button2.style.display='table-cell'
+        })
+        button2.addEventListener('click',()=>{
+            all_logs.style.display = 'none'
+            current_logs.style.display = 'table-cell'
+            button1.style.display='table-cell'
+            button2.style.display='none'
+        })
+    </script> -->
+    </body>
 </html>
