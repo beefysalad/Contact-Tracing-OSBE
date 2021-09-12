@@ -20,21 +20,13 @@ if(document.referrer && sessionStorage.getItem('camUse')!==null){
             audio.play()
             document.querySelector('#qrText').value = c
             setTimeout(()=>{
-                document.querySelector('#qrText').value = ""
+                // document.querySelector('#qrText').value = ""
                 document.forms["uniqueid"].submit()
             },500)
         })
 }else{
     console.info( "This page is not reloaded");
 }
-// if (performance.navigation.type == 1 && sessionStorage.getItem('camUse')!==null) {
-    
-//     // console.info( "This page is reloaded" );
-//     // console.log(`${sessionStorage.getItem('camUse')}`)
-//   } 
-//   else {
-    
-//   }
 Instascan.Camera.getCameras()
 .then(function(cameras){
     for(let i=0; i<cameras.length; i++){
@@ -66,7 +58,7 @@ Instascan.Camera.getCameras()
                     document.querySelector('#qrText').value = c
                     setTimeout(()=>{
                         document.forms["uniqueid"].submit()
-                        document.querySelector('#qrText').value = ""
+                        // document.querySelector('#qrText').value = ""
                     },500)
                 })
             //end
