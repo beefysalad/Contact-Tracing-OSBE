@@ -71,12 +71,16 @@
             <input type="text" name="qrText" id="qrText" class="form-control" readonly required>
         </form>
     </div>
+    <div class="d-flex mx-auto tik">
+            
+    </div>
     <div class="container bg-danger testz mt-5">
         <p class="text-center lead">TO-DO PANI DIRI PERO ESSENTIALLY MUGAWAS ANG PICTURE(IF NAA) AND DETAILS SA USER IF MA SCAN SILA </p>
         <% if (messages.info) { %>
             <img src="<%= messages.info %>" alt="" class="yawa"> 
         <% } %>
     </div>
+    
 
 <%- include('../partials/footer') %>
 <script src="/scripts/qrscript.js"></script>
