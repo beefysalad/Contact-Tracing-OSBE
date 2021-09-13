@@ -1,4 +1,4 @@
-let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+let scanner = new Instascan.Scanner({ video: document.getElementById('preview'), mirror:false});
 if(document.referrer && sessionStorage.getItem('camUse')!==null){
     scanner.addListener('scan', function (content) {
         console.log(content);
