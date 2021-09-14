@@ -128,6 +128,7 @@
                     </tbody>
                 </table>
                 <a href="/establishments-dashboard" class="btn btn-primary">Go Back</a>
+                <button class="btn btn-warning" onclick="ExportToExcel('xlsx')">Convert to excel</button>
             </div>
            
         </div>
@@ -136,13 +137,22 @@
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap5.min.css">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sidebars/">
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.1/js/dataTables.bootstrap5.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
     <script>
         $(document).ready(function() {
             $('#example').DataTable();
         } );
+        function ExportToExcel(type, fn, dl) {
+        let elt = document.getElementById('example');
+        let wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+       return dl ?
+         XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
+         XLSX.writeFile(wb, fn || ('MySheetName.' + (type || 'xlsx')));
+    }
     </script>
 </body>
 </html>
