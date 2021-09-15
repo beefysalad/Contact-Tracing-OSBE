@@ -143,6 +143,7 @@
     <script src="https://cdn.datatables.net/1.11.1/js/dataTables.bootstrap5.min.js"></script>
     <script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
     <script>
+        
         $(document).ready(function() {
             $('#example').DataTable();
         } );
@@ -151,7 +152,7 @@
         let wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
        return dl ?
          XLSX.write(wb, { bookType: type, bookSST: true, type: 'base64' }):
-         XLSX.writeFile(wb, fn || ('MySheetName.' + (type || 'xlsx')));
+         XLSX.writeFile(wb, fn || ('Covid Tracer' + '' + (type || 'xlsx')));
     }
     </script>
 </body>

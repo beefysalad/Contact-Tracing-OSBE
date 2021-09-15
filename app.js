@@ -6,7 +6,7 @@ const flash = require('express-flash')
 const localStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
 const passport = require('passport')
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 8080
 const path = require('path')
 const mongoose = require('mongoose')
 const User = require('./model/users')
@@ -180,6 +180,7 @@ app.get('/',(req,res)=>{
 //ROUTE FOR ESTABLISHMENTS
 app.get('/establishments-logs/:id',isLoggedin,async (req,res)=>{
     const {id} = req.params
+    const user = req.user
     const data = await Log.findOne({_id:id})
     let arr = []
     data.logs.reverse()
@@ -189,7 +190,7 @@ app.get('/establishments-logs/:id',isLoggedin,async (req,res)=>{
         arr.push(d)
     }
     let currentDate = moment(new Date()).format('MMM DD YYYY')
-    res.render('establishments/elogs',{data,currentDate,arr})
+    res.render('establishments/elogs',{data,currentDate,arr,user})
 })
 app.get('/establishments-scanqr',isLoggedin,(req,res)=>{
     res.render('establishments/escanner')
@@ -317,10 +318,10 @@ app.post('/client-register',(req,res)=>{
     let genPic
     if(gender==='Male'){
         // console.log('nisud sa male');
-        genPic = 'defaultmale.jpg'
+        genPic = 'https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultmale_xwnrss.jpg'
     }else if(gender==='Female'){
         // console.log('nisud sa female');
-        genPic = 'defaultfemale.png'
+        genPic = 'https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultfemale_j2cqjd.jpg'
     }
     
     User.findOne({username:username},(err,user)=>{
@@ -350,7 +351,7 @@ app.post('/client-register',(req,res)=>{
                     let id
                     await newUser.save()
                         .then(data=>{
-                            console.log('Successfully added a client user user!');
+                            console.log('Successfully added a client user!');
                             id = data._id
                         })
                     res.redirect(`/client-qr/${id}`)
