@@ -1,8 +1,8 @@
-$(document).ready(function() {
-    $('#example').DataTable( {
-        "scrollX": true
-    } );
-} );
+// $(document).ready(function() {
+//     $('#example').DataTable( {
+//         "scrollX": true
+//     } );
+// } );
     function ExportToExcel(type, fn, dl) {
     let elt = document.getElementById('example');
     let wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });

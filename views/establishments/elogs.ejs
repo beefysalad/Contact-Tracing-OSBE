@@ -20,6 +20,19 @@
         height: 30px;
         border-radius: 50%;
     }
+    table.dataTable thead>tr>th.sorting_asc,
+    table.dataTable thead>tr>th.sorting_desc,
+    table.dataTable thead>tr>th.sorting,
+    table.dataTable thead>tr>td.sorting_asc,
+    table.dataTable thead>tr>td.sorting_desc,
+    table.dataTable thead>tr>td.sorting {
+        padding-right: 8px;
+    }
+    
+    th.sorting_asc::after,
+    th.sorting_desc::after {
+    content:"" !important;
+    }
     .dataTable > thead > tr > th[class*=sort]:after{ display:none; }
     @media (max-width: 376px){
         body{
@@ -114,6 +127,17 @@
                                         <th scope="col">Time in</th>
                                     </tr>
                                 </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col"></th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Age</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col">Time in</th>
+                                    </tr>
+                                </tfoot>
                                 <tbody>
                                     <% if (data && arr) { %>
                                         <% for( let index = 0; index < data.logs.length; index++ ) { %>
@@ -145,20 +169,7 @@
         </div>
     </div>
 
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.1/css/dataTables.bootstrap5.min.css">
-<link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sidebars/">
-<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.11.1/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.1/js/dataTables.bootstrap5.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/simple-datatables@latest/dist/style.css" rel="stylesheet" />
-<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
-<script src="https://kit.fontawesome.com/2d845355d1.js" crossorigin="anonymous"></script>
-<script src="/scripts/sidebartrigger.js"></script>
-<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
-<script src="/scripts/datatable.js"></script>
-<script src="/scripts/getcamlength.js"></script>
-
+    <%- include('../partials/scripts') %> 
+   
 </body>
 </html>
