@@ -15,6 +15,11 @@
     .targetz{
         background-color: rgb(13, 110, 253);
     }
+    .test{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+    }
     .test2{
         width: 30px;
         height: 30px;
@@ -56,7 +61,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">Account Settings</a></li>
+                    <li><a class="dropdown-item" href="#!"><img src="/images/test.png" alt="" class="test">   Account Settings</a></li>
                     <li><hr class="dropdown-divider" /></li>
                     <li><a class="dropdown-item" href="/logoutE">Logout</a></li>
                 </ul>
@@ -99,10 +104,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="sb-sidenav-footer">
+                <div class="sb-sidenav-footer py-2">
                     <div class="small">Logged in as:</div>
                     <img src="/images/test.png" alt="" class="test2">
-                    <%= user.contactPerson %> 
+                    <%= user.contactPerson %>
                 </div>
             </nav>
         </div>
@@ -170,6 +175,6 @@
     </div>
 
     <%- include('../partials/scripts') %> 
-   
+
 </body>
 </html>
