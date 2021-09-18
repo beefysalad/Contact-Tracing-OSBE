@@ -1,5 +1,5 @@
 <%- include('../partials/header') %> 
-<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+
 <title>Scanning QR</title>
 <style>
     .cont{
@@ -26,6 +26,16 @@
     }
     .v{
         height: 98vh;
+    }
+    .test{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+    }
+    .test2{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
     }
     @media (max-width: 570px){
         .cont{
@@ -54,10 +64,72 @@
         }
     }
 </style>
+<link rel="stylesheet" href="/styles.css">
 </head>
-<body class="d-flex flex-column vh-100">
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="#">CCT |</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <!-- Navbar-->
+        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#!"><img src="/images/test.png" alt="" class="test">   Account Settings</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="/logoutE">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark targetz" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Main</div>
+                        <a class="nav-link" href="/establishments-logs/<%= user._id %> ">
+                            <div class="sb-nav-link-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            Dashboard
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Functionalities</div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            Customer Logs
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="#">Todays Logs</a>
+                                <a class="nav-link" href="/establishments-logs/<%= user._id %> ">All Logs</a>
+                                
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutz" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            Scan QR Code
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayoutz" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav cameras_but">
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer py-2">
+                    <div class="small">Logged in as:</div>
+                    <img src="/images/test.png" alt="" class="test2">
+                    <%= user.contactPerson %>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <div style="display:none;" class="cam_num"><%=cam_num %></div>
     <% if (messages.success) { %>
-        
      <h1 class="text-center text-primary dis"><%= messages.success %> </h1>
     <% } %>
     <% if (messages.error) { %>
@@ -67,7 +139,7 @@
         <p class="text-center lead">Align your QR Code infront of the scanner</p>
         <video id="preview"></video>
         <label id="qrt" class="form-label text-warning" for="qrText">Users Unique ID</label>
-        <form action="/give-qr" method="POST" id="uniqueid">
+        <form action="/give-qr/<%=cam_num%> " method="POST" id="uniqueid">
             <input type="text" name="qrText" id="qrText" class="form-control" readonly required>
         </form>
     </div>
@@ -83,41 +155,10 @@
     
 
 <%- include('../partials/footer') %>
-<script src="/scripts/qrscript.js"></script>
-<script>
-  
-    let z = document.querySelector('.time')
-    const timer = function(){
-            setInterval(()=>{
-            const date = new Date()
-            let day = date.getDate()
-            let month = date.getMonth()
-            let year = date.getFullYear()
-            let hour = date.getHours()
-            let minute = date.getMinutes()
-            let secs = date.getSeconds()
-            let h, ind
-            if(minute<10){
-                minute = '0' + minute
-            }
-            if(secs<10){
-                secs = '0' + secs
-            }
-            if(hour>12){
-                hour = hour - 12
-                ind = 'PM'
-            }
-            else if(hour===0){
-                hour = hour + 12
-            }
-            else{
-                ind ='AM'
-            }
-            // z.innerText = `${hour}:${minute}:${secs} ${ind}`
-            timer
-        },1000)
-    }
-    // timer()
-</script>
+<script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
+<script src="/scripts/getcamera.js"></script>
+<script src="https://kit.fontawesome.com/2d845355d1.js" crossorigin="anonymous"></script>
+<script src="/scripts/sidebartrigger.js"></script>
+<script src="/scripts/getcamlength.js"></script>
 </body>
 </html>

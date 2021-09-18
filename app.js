@@ -109,10 +109,12 @@ function isLoggedinU(req,res,next){
         if(req.user instanceof User){
             return next()
         }
-       
+        else if(req.user instanceof Establishment){
+            res.redirect('/establishments-dashboard')
+        }
     }
     req.flash('error',{message: 'You have an Invalid session!'})
-    res.redirect('/')
+    res.redirect('/client-dashboard')
 }
 function isLoggedOutU(req,res,next){
     if(!req.isAuthenticated()){
@@ -125,9 +127,12 @@ function isLoggedin(req,res,next){
         if(req.user instanceof Establishment){
             return next()
         }
+        else if(req.user instanceof User){
+            res.redirect('/client-dashboard')
+        }
     }
     req.flash('error',{message: 'You have an Invalid session!'})
-    res.redirect('/')
+    res.redirect('/establishments-dashboard')
  
 }
 function isLoggedOut(req,res,next){
@@ -189,11 +194,13 @@ app.get('/establishments-logs/:id',isLoggedin,async (req,res)=>{
         const d = await User.findOne({_id:data.logs[i].id})
         arr.push(d)
     }
-    let currentDate = moment(new Date()).format('MMM DD YYYY')
-    res.render('establishments/elogs',{data,currentDate,arr,user})
+    let currentDate = moment(new Date()).format('MM/DD/YYYY')
+    res.render('establishments/elogs',{data,currentDate,arr,user,moment:moment})
 })
-app.get('/establishments-scanqr',isLoggedin,(req,res)=>{
-    res.render('establishments/escanner')
+app.get('/establishments-scanqr/:cam_num',isLoggedin,(req,res)=>{
+    const {cam_num} = req.params
+    const user = req.user
+    res.render('establishments/escanner',{cam_num,user})
 })
 app.get('/establishments-login',isLoggedOut,(req,res)=>{
     res.render('establishments/elogin')
@@ -201,10 +208,22 @@ app.get('/establishments-login',isLoggedOut,(req,res)=>{
 app.get('/establishments-registration',isLoggedOut,(req,res)=>{
     res.render('establishments/eregister')
 })
-app.get('/establishments-dashboard',isLoggedin,(req,res)=>{
-    // console.log(req.user);
+app.get('/establishments-dashboard',isLoggedin,async (req,res)=>{
+    
     const user = req.user
-    res.render('establishments/edashboard',{user})
+    const data = await Log.findOne({_id:user._id})
+    let arr = []
+    data.logs.reverse()
+    // , datalogs = data.logs.reverse()
+    for(let i=0; i<data.logs.length; i++){
+        const d = await User.findOne({_id:data.logs[i].id})
+        arr.push(d)
+    }
+    let currentDate = moment(new Date()).format('MM/DD/YYYY')
+    let day = moment(currentDate).format('MMM DD YYYY')
+    // console.log(req.user);
+    
+    res.render('establishments/edashboardz',{data,currentDate,arr,user,day,moment:moment})
 })
 app.get('/logoutE',(req,res)=>{
     req.logOut()
@@ -215,7 +234,8 @@ app.post('/elogin',passport.authenticate('elogin',{
     failureRedirect: '/establishments-login',
     failureFlash: true
 }))
-app.post('/give-qr',(req,res)=>{
+app.post('/give-qr/:cam_num',(req,res)=>{
+    const {cam_num} = req.params
     User.findById(req.body.qrText,(err,user)=>{
         if(user){
             req.flash('success',`Welcome ${user.firstName} ${user.lastName}`)
@@ -223,14 +243,14 @@ app.post('/give-qr',(req,res)=>{
             let fullName = `${user.firstName} ${user.lastName}`
             const date = new Date()
             // console.log(`${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
-            Log.updateOne({_id:req.user._id},{$push:{logs:[{id:user._id,date:moment(new Date()).format('MMM DD YYYY'),time:moment(new Date()).format('hh:mm:ss A'),name:fullName}]}})
+            Log.updateOne({_id:req.user._id},{$push:{logs:[{id:user._id,date:moment(new Date()).format('MM/DD/YYYY'),time:moment(new Date()).format('hh:mm:ss A'),name:fullName}]}})
                 .then(data=>{
                     // console.log(data);
                 })
-            res.redirect('/establishments-scanqr')
+            res.redirect(`/establishments-scanqr/${cam_num}`)
         }else{
             req.flash('error','User does not exist!')
-            res.redirect('/establishments-scanqr')
+            res.redirect(`/establishments-scanqr/${cam_num}`)
         }
     })
 })
@@ -254,7 +274,8 @@ app.post('/eregister',(req,res)=>{
                         username: username,
                         email: email,
                         password: hash,
-                        dateOfRegistration: `${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+                        dateOfRegistration: `${moment(new Date()).format('MM/DD/YYYY')} ${moment(new Date()).format('hh:mm:ss A')}`
+                        
                     })
                     await newEstablish.save()
                         .then(data=>{
@@ -346,7 +367,7 @@ app.post('/client-register',(req,res)=>{
                         username:username,
                         password: hash,
                         image: genPic,
-                        dateOfRegistration: `${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+                        dateOfRegistration: `${moment(new Date()).format('MM/DD/YYYY')} ${moment(new Date()).format('hh:mm:ss A')}`
                     })
                     let id
                     await newUser.save()

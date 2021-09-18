@@ -33,7 +33,7 @@ Instascan.Camera.getCameras()
         const camBut = document.createElement('button')
         camBut.classList.add('btn','btn-warning','mx-2','mt-2','tea')
         camBut.innerText = `Camera ${i+1}`
-        console.log(`Greetings from button: ${i+1}`) 
+        // console.log(`Greetings from button: ${i+1}`) 
         // let camUse
                 
         camBut.addEventListener('click',()=>{
