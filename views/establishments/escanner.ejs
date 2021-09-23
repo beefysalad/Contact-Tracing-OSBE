@@ -3,30 +3,44 @@
 <title>Scanning QR</title>
 <style>
     .cont{
-        width: 600px;
-        height: 500px;
-        padding: 20px;
+        display: flex;
+        align-items: center;
     }
-    .testz{
+    /* .testz{
             width: 600px;
             height: 500px;
-    }
-    .yawa{
-        width: 100px;
-        height: 100px;
-    }
+    } */  
+    
     #preview{
         position: relative;
         min-width: 100%;
-        max-height: 100%;
-        width: 400px;
-        height: 400px;
-        /* border: 1px solid red; */
+        max-height: inherit;
+        width: 100%;
+        /* height: 400px; */
+        /* background-color: coral; */
         margin: 0 auto;
     }
-    .v{
+    
+    /* .v{
         height: 98vh;
+    } */
+    .image-container{
+        max-width: inherit;
+        max-height: inherit;
+        width: 100%;
+        height: 350px;
+        border: 1px solid black;
     }
+    .u-pic{
+        width: 100%;
+        max-height: inherit;
+        height: 100%;
+    }
+    .u-info{
+        height: 100%;
+        align-self: center;
+        /* margin: 0 auto; */
+     }
     .test{
         width: 20px;
         height: 20px;
@@ -37,6 +51,8 @@
         height: 30px;
         border-radius: 50%;
     }
+
+    
     @media (max-width: 570px){
         .cont{
             width:450px;
@@ -47,20 +63,22 @@
             width: 250px;
         }
     }
-    .dis{
-        margin: 0;
-        background-color: red;
-        transition: margin-top 1s;
-        z-index: -99;
-    }
+
     @media (max-width: 500px){
         .cont{
             width:300px;
-            
-            
         }
+        .u-info{
+            height:400px;
+        }
+        /* #c{
+            height: 300px;
+        }    */
         #preview{
-            width: 100px;
+            width: 200px;
+        }
+        .image-container{
+            height: 150px;
         }
     }
 </style>
@@ -73,7 +91,7 @@
         <!-- Sidebar Toggle-->
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
         <!-- Navbar-->
-        <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -127,34 +145,127 @@
                 </div>
             </nav>
         </div>
-    </div>
-    <div style="display:none;" class="cam_num"><%=cam_num %></div>
-    <% if (messages.success) { %>
-     <h1 class="text-center text-primary dis"><%= messages.success %> </h1>
-    <% } %>
-    <% if (messages.error) { %>
-     <h1 class="text-danger text-center dis"><%= messages.error %> </h1>
-    <% } %>
-    <div class="container bg-primary cont mt-5 d-flex flex-column">
-        <p class="text-center lead">Align your QR Code infront of the scanner</p>
-        <video id="preview"></video>
-        <label id="qrt" class="form-label text-warning" for="qrText">Users Unique ID</label>
-        <form action="/give-qr/<%=cam_num%> " method="POST" id="uniqueid">
-            <input type="text" name="qrText" id="qrText" class="form-control" readonly required>
-        </form>
-    </div>
-    <div class="d-flex mx-auto tik">
-            
-    </div>
-    <div class="container bg-danger testz mt-5">
-        <p class="text-center lead">TO-DO PANI DIRI PERO ESSENTIALLY MUGAWAS ANG PICTURE(IF NAA) AND DETAILS SA USER IF MA SCAN SILA </p>
-        <% if (messages.info) { %>
-            <img src="<%= messages.info %>" alt="" class="yawa"> 
-        <% } %>
+        <div id="layoutSidenav_content">
+            <div style="display:none;" class="cam_num"><%=cam_num %></div>
+            <main>
+                <div class="container-fluid px-5">
+                    <div class="row cont">
+                        <div class="col-md-8 mt-5">
+                            <div class="card bg-dark" id="c">
+                                <div class="card-header text-white">
+                                   <i class="fas fa-table me-1"></i>
+                                   <span>Scanning QR Code</span> 
+                                </div>
+                                <div class="card-body bg-light">
+                                    <video id="preview" class="vidz"></video>
+                                    <label for=""></label>
+                                    <label id="qrt" class="form-label text-dark" for="qrText">Users Unique ID</label>
+                                    <form action="/give-qr/<%=cam_num%> " method="POST" id="uniqueid">
+                                        <input type="text" name="qrText" id="qrText" class="form-control" readonly required>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mt-5">
+                            <div class="card bg-dark u-info">
+                                <div class="card-header text-white">
+                                   <i class="fas fa-table me-1"></i>
+                                   <span>User Details</span> 
+                                </div>
+                                <div class="card-body bg-light">
+                                    <% if (messages.success) { %>
+                                        <h2 class="text-center display-5" style="text-transform: uppercase;">Welcome!</h2>
+                                    <% } else if(messages.error) { %>
+                                        <h2 class="text-center display-5 text-danger" style="text-transform: uppercase;">User does not exist!</h2>
+                                    <% } else { %>
+                                        <!-- <h2 class="text-center display-5" style="text-transform: uppercase;">Else</h2> -->
+                                    <% } %>
+                                    <div class="image-container">
+                                        <% if (messages.info) { %>
+                                            <img src="<%= messages.info %>" alt="" class="u-pic"> 
+                                        <% } else if(messages.error) { %>
+                                            <img src="/images/nope.jpg" alt="" class="u-pic"> 
+                                        <% } else { %>
+                                            <img src="/images/none.png" alt="" class="u-pic"> 
+                                        <%  } %>
+                                        
+                                    </div>
+                                    <form action="#" class="mt-2">
+                                        <div class="row">
+                                            <div class="col-md-6 mt-2">
+                                                <% if (messages.success) { %>
+                                                    <input value="<%=userDets.firstName%> <%=userDets .lastName%>" type="text" name="fullName" id="fullName" class="form-control" required readonly placeholder="Name">
+                                                <% } else { %>
+                                                    <input type="text" name="fullName" id="fullName" class="form-control" required readonly placeholder="Name">
+                                                <% } %>
+                                               
+                                            </div>
+                                            <div class="col-md-4 mt-2">
+                                                <% if (messages.success) { %>
+                                                    <input value="<%=userDets.gender%>" type="text" name="gender" id="gender" class="form-control" placeholder="gender" required readonly>
+                                                <% } else { %>
+                                                    <input type="text" name="gender" id="gender" class="form-control" placeholder="Gender" required readonly>
+                                                <% } %>
+                                                
+                                            </div>
+                                            <div class="col-md-2 mt-2">
+                                                <% if (messages.success) { %>
+                                                    <input value="<%=age%> " type="text" name="age" id="age" class="form-control" placeholder="Age" required readonly>
+                                                <% } else { %>
+                                                    <input type="text" name="age" id="age" class="form-control" placeholder="Age" required readonly>
+                                                <% } %>
+                                               
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <div class="row mt-5" style="background-color: red;">
+                        <div class="col-md-6" style="background-color: pink;">
+                                1
+                        </div>
+                        <div class="col-md-6" style="background-color: aqua;">
+                            2
+                        </div>
+                    </div> -->
+                    
+                    <!-- <% if (messages.success) { %>
+                    <h1 class="text-center text-primary dis"><%= messages.success %> </h1>
+                    <% } %>
+                    <% if (messages.error) { %>
+                    <h1 class="text-danger text-center dis"><%= messages.error %> </h1>
+                    <% } %>
+                    <div class="container bg-primary cont mt-5 d-flex flex-column">
+                        <p class="text-center lead">Align your QR Code infront of the scanner</p>
+                        <video id="preview"></video>
+                        <label id="qrt" class="form-label text-warning" for="qrText">Users Unique ID</label>
+                        <form action="/give-qr/<%=cam_num%> " method="POST" id="uniqueid">
+                            <input type="text" name="qrText" id="qrText" class="form-control" readonly required>
+                        </form>
+                    </div>
+                    <div class="d-flex mx-auto tik">
+                            
+                    </div>
+                    <div class="container bg-danger testz mt-5">
+                        <p class="text-center lead">TO-DO PANI DIRI PERO ESSENTIALLY MUGAWAS ANG PICTURE(IF NAA) AND DETAILS SA USER IF MA SCAN SILA </p>
+                        <% if (messages.info) { %>
+                            <img src="<%= messages.info %>" alt="" class="yawa"> 
+                        <% } %>
+                    </div> -->
+                </div>
+                
+            </main>
+            <footer class="py-4 bg-light mt-3">
+                <!-- <%- include('../partials/footer') %> -->
+            </footer>
+        </div>
     </div>
     
+    
+   
 
-<%- include('../partials/footer') %>
 <script src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 <script src="/scripts/getcamera.js"></script>
 <script src="https://kit.fontawesome.com/2d845355d1.js" crossorigin="anonymous"></script>

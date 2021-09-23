@@ -127,6 +127,22 @@
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
+    const password = document.querySelector('#password'),
+        cpassword = document.querySelector('#cpassword')
+        const username = document.querySelector('#username'),
+        form = document.querySelector('form')
+        cpassword.addEventListener('keyup',(e)=>{
+
+        if(cpassword.value==password.value){
+            cpassword.setCustomValidity('')
+        }
+        else{
+            cpassword.setCustomValidity('Passwords do not match')
+        }
+            cpassword.reportValidity()
+        })
+</script>
+<script>
 
      let formData = {
 			set : function (){
@@ -174,20 +190,7 @@
 			formData.set();
 		});
         
-        const password = document.querySelector('#password'),
-        cpassword = document.querySelector('#cpassword')
-        const username = document.querySelector('#username'),
-        form = document.querySelector('form')
-        cpassword.addEventListener('keyup',(e)=>{
-
-        if(cpassword.value==password.value){
-            cpassword.setCustomValidity('')
-        }
-        else{
-            cpassword.setCustomValidity('Passwords do not match')
-        }
-            cpassword.reportValidity()
-        })
+        
 </script>
 
 

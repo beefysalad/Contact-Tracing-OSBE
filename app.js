@@ -50,7 +50,7 @@ const upload = multer({
     // }
 })
 //DATABASE
-// mongoose.connect('mongodb://localhost:27017/final_test', {
+// mongoose.connect('mongodb://localhost:27017/CTA', {
 //     useNewUrlParser: true, 
 //     useUnifiedTopology: true,
     
@@ -220,7 +220,9 @@ app.get('/establishments-dashboard',isLoggedin,async (req,res)=>{
         arr.push(d)
     }
     let currentDate = moment(new Date()).format('MM/DD/YYYY')
-    let day = moment(currentDate).format('MMM DD YYYY')
+    
+    let day = moment(new Date()).format('LL') //.format('MMM DD YYYY')
+    
     // console.log(req.user);
     
     res.render('establishments/edashboardz',{data,currentDate,arr,user,day,moment:moment})
@@ -236,21 +238,29 @@ app.post('/elogin',passport.authenticate('elogin',{
 }))
 app.post('/give-qr/:cam_num',(req,res)=>{
     const {cam_num} = req.params
-    User.findById(req.body.qrText,(err,user)=>{
-        if(user){
-            req.flash('success',`Welcome ${user.firstName} ${user.lastName}`)
-            req.flash('info', user.image)
-            let fullName = `${user.firstName} ${user.lastName}`
+    
+    User.findById(req.body.qrText,(err,userz)=>{
+        const user = req.user
+        if(userz){
+            req.flash('success',`Welcome ${userz.firstName} ${userz.lastName}`)
+            req.flash('info', userz.image)
+            let fullName = `${userz.firstName} ${userz.lastName}`
+            let userDets = userz
             const date = new Date()
+            const age = moment().diff(userz.birthDate,'years')
             // console.log(`${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
-            Log.updateOne({_id:req.user._id},{$push:{logs:[{id:user._id,date:moment(new Date()).format('MM/DD/YYYY'),time:moment(new Date()).format('hh:mm:ss A'),name:fullName}]}})
+            Log.updateOne({_id:user._id},{$push:{logs:[{id:userz._id,date:moment(new Date()).format('MM/DD/YYYY'),time:moment(new Date()).format('hh:mm:ss A'),name:fullName}]}})
                 .then(data=>{
                     // console.log(data);
                 })
-            res.redirect(`/establishments-scanqr/${cam_num}`)
+                
+            // res.redirect(`/establishments-scanqr/${cam_num}`,{user})
+            res.render(`establishments/escanner`,{cam_num,userDets,user,age})
         }else{
             req.flash('error','User does not exist!')
-            res.redirect(`/establishments-scanqr/${cam_num}`)
+            // res.redirect(`/establishments-scanqr/${cam_num}`)
+            
+            res.render(`establishments/escanner`,{cam_num,user})
         }
     })
 })
@@ -361,7 +371,7 @@ app.post('/client-register',(req,res)=>{
                         lastName:lastName,
                         contactNumber: contactNumber,
                         emailAddress: emailAddress,
-                        birthDate: birthDate,
+                        birthDate: moment(birthDate).format('MM/DD/YYYY'),
                         address:address,
                         gender: gender,
                         username:username,
