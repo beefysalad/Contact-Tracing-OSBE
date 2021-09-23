@@ -251,7 +251,7 @@ app.post('/give-qr/:cam_num',(req,res)=>{
             // console.log(`${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
             Log.updateOne({_id:user._id},{$push:{logs:[{id:userz._id,date:moment(new Date()).format('MM/DD/YYYY'),time:moment(new Date()).format('hh:mm:ss A'),name:fullName}]}})
                 .then(data=>{
-                    // console.log(data);
+                    
                 })
                 
             // res.redirect(`/establishments-scanqr/${cam_num}`,{user})
