@@ -1,0 +1,275 @@
+<%- include('../partials/header') %> 
+<title>Document</title>
+<style>
+    .image-container{
+        height: 300px;
+        width: 300px;
+        background-color: red;
+        border: 2px solid black;
+    }
+    .imagez{
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        margin: 0 auto;
+    }
+    .left-content{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        
+    }
+    .m-content{
+        margin-top: 10vh;
+    }
+    @media (max-width: 767px) {
+        .m-content{
+            margin-top: 0;
+        }
+    }
+</style>
+<link rel="stylesheet" href="/css/usersidebar.css">
+ <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
+ <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous"> -->
+ <!-- Google Fonts Roboto -->
+ <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
+ <!-- MDB -->
+ <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet"/>
+</head>
+<body>
+<header>
+    <!-- Sidebar -->
+    <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse">
+      <div class="position-sticky">
+        <div class="list-group list-group-flush mx-3 mt-4">
+          <!-- Collapse 1 -->
+          <a class="list-group-item list-group-item-action py-2 ripple"
+            aria-current="true"
+            data-mdb-toggle="collapse"
+            href="#collapseExample1"
+            aria-expanded="true"
+            aria-controls="collapseExample1">
+            <i class="fas fa-tachometer-alt fa-fw me-3"></i><span>Dashboard</span>
+          </a>
+          <!-- Collapsed content -->
+          <ul id="collapseExample1" class="collapse show list-group list-group-flush">
+            <li class="list-group-item py-1">
+              <a href="/client-dashboard" class="text-reset">User Logs</a>
+            </li>
+          </ul>
+          <!-- Collapse 1 -->
+  
+          <!-- Collapse 2 -->
+          <a
+            class="list-group-item list-group-item-action py-2 ripple"
+            aria-current="true"
+            data-mdb-toggle="collapse"
+            href="#collapseExample2"
+            aria-expanded="true"
+            aria-controls="collapseExample2">
+            
+            <i class="fas fa-chart-area fa-fw me-3"></i><span>Profile Settings</span>
+          </a>
+          <!-- Collapsed content -->
+          <ul id="collapseExample2" class="collapse list-group list-group-flush">
+            <li class="list-group-item py-2">
+              <a href="/client-profile" class="text-reset">View Profile</a>
+            </li>
+            <li class="list-group-item py-2">
+                <a href="" class="text-reset">Edit Profile</a>
+            </li>
+            <li class="list-group-item py-2">
+                <a href="" class="text-reset">My QR Code</a>
+            </li>
+            
+          </ul>
+          <!-- Collapse 2 -->
+        </div>
+        
+      </div>
+     
+    </nav>
+    <!-- Sidebar -->
+  
+    <!-- Navbar -->
+    <nav id="main-navbar" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <!-- Container wrapper -->
+      <div class="container-fluid">
+        <!-- Toggle button -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-mdb-toggle="collapse"
+          data-mdb-target="#sidebarMenu"
+          aria-controls="sidebarMenu"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <i class="fas fa-bars"></i>
+        </button>
+  
+        <!-- Brand -->
+        <a class="navbar-brand" href="#">
+          <img
+            src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png"
+            height="25"
+            alt=""
+            loading="lazy"
+          />
+        </a>
+      
+        <!-- Right links -->
+        <ul class="navbar-nav ms-auto d-flex flex-row">
+          <!-- Notification dropdown -->
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link me-3 me-lg-0 dropdown-toggle hidden-arrow"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-mdb-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <i class="fas fa-bell fa-2x"></i>
+              <span class="badge rounded-pill badge-notification bg-danger">1</span>
+            </a>
+            <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="navbarDropdownMenuLink"
+            >
+              <li><a class="dropdown-item" href="#">To do pani diri</a></li>
+              <li><a class="dropdown-item" href="#">To do pani diri</a></li>
+              <li>
+                <a class="dropdown-item" href="#">Topi ngano bakat imoha</a>
+              </li>
+            </ul>
+          </li>
+          <!-- Icon -->
+          <!-- <li class="nav-item me-3 me-lg-0">
+            <a class="nav-link" href="#">
+              <i class="fab fa-github fa-2x"></i>
+            </a>
+          </li> -->
+          <!-- Avatar -->
+          <li class="nav-item dropdown">
+            <a
+              class="nav-link dropdown-toggle hidden-arrow d-flex align-items-center"
+              href="#"
+              id="navbarDropdownMenuLink"
+              role="button"
+              data-mdb-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <img
+                src="<%=user.image%>"
+                class="rounded-circle"
+                height="30"
+                width="30"
+                alt=""
+                loading="lazy"
+              />
+            </a>
+            <ul
+              class="dropdown-menu dropdown-menu-end"
+              aria-labelledby="navbarDropdownMenuLink"
+            >
+              <li><a class="dropdown-item" href="#"><%=user.firstName%> <%=user.lastName%> </a></li>
+              <li><a class="dropdown-item" href="/client-profile">My profile</a></li>
+              <li><a class="dropdown-item" href="/logoutU">Logout</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+  </header>
+  <main style="margin-top: 58px;">
+    <ol class="breadcrumb pt-4 px-3">
+        <li class="breadcrumb-item"><a href="/client-dashboard">Dashboard</a></li>
+        <li class="breadcrumb-item"><a href="#">Profile Settings</a></li>
+        <li class="breadcrumb-item active" aria-current="page">My Qr Code</li>
+        
+        
+    </ol>
+   
+    <hr style="margin-top: 5px;">
+   
+    
+    <div class="container pt-4 m-content">
+        
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                My QR Code
+            </div>
+            <div class="card-body" style="border: 1px solid black;">
+                <div class="container cont bg-dark">
+                    <h1 class="text-center text-light">QR code generator</h1>
+                    <p class="text-light text-center form-text">Present this QR code upon entering establishments using our application and you will automatically be logged</p>
+                    <p class="form-text text-center">Note: ios users cannot download using the button, taking a screenshot is the alternative method</p>
+                    <div class="row">
+                        <div class="col">
+                            <!-- <label class="form-label text-light" for="qrText">Users Unique ID to be stored in QR (picturi ang qr code using your phone nya mao to imo gamiton inig scan)</label> -->
+                            
+                            <input readonly value="<%=user._id%>" required placeholder="Input Text" class="dod form-control" type="text" name="qrText" id="qrText" style="display: none;">
+                        </div>
+                        <div class="">
+                            <canvas style="display: block; cursor: pointer;" class="mx-auto" height="200" width="200" id="qrCode" onclick="imageClick()"></canvas>
+                        </div>
+                        <p class="form-text text-center">Click the QR Code to download it</p>
+                    </div>
+                    <div class="child mt-5 ptr" style="display: none;">
+                        <button class="btn-primary btn">Download QR Code</button>
+                    </div>                   
+                </div>
+            </div>
+        </div>
+    </div>
+  
+  </main>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
+<script>
+  let qr
+    
+    (function (){
+        qr = new QRious({
+            element: document.querySelector('#qrCode'),
+            value: document.querySelector('.dod').value,
+            padding: 10,
+            
+            size:200
+        })
+    })()
+
+    const button = document.querySelector('.ptr')
+    button.addEventListener('click',()=>{
+    let canvas = document.querySelector('#qrCode')
+        img = canvas.toDataURL("image/jpeg")
+        axios({
+            url: img,
+            method: 'GET',
+            responseType: 'blob',
+            padding: 225,
+        })
+        .then((response) => {
+         const url = window.URL
+         .createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'QRCode.png');
+                document.body.appendChild(link);
+                link.click();
+        })
+
+})
+function imageClick(){
+    button.click()
+}
+</script>
+
+</body>
+</html>

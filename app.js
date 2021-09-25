@@ -319,6 +319,15 @@ app.post('/change-picture/:id',upload.single('image'),isLoggedinU,(req,res)=>{
             res.redirect('/client-dashboard')
         })
 })
+
+app.get('/client-profile',isLoggedinU,(req,res)=>{
+    const user = req.user
+    res.render('users/uviewprofile',{user})
+})
+app.get('/client-profile/edit',isLoggedinU,(req,res)=>{
+    const user = req.user
+    res.render('users/ueditprofile',{user})
+})
 app.get('/logoutU',(req,res)=>{
     req.logOut()
     res.redirect('/client-login')
@@ -333,6 +342,10 @@ app.get('/client-dashboard',isLoggedinU,(req,res)=>{
     const user = req.user
     // console.log(`user logged in is ${req.user}`);
     res.render('users/udashboard',{user})
+})
+app.get('/client-new-qr-code',isLoggedinU,(req,res)=>{
+    const user = req.user
+    res.render('users/unewqr',{user})
 })
 app.post('/client-login',passport.authenticate('local',{
     successRedirect: '/client-dashboard',
