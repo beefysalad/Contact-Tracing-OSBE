@@ -45,10 +45,10 @@ const storage = new CloudinaryStorage({
 })
 const upload = multer({
     storage: storage,
-    // limits:{
+   
+}) // limits:{
     //     fileSize: 1024*1024*3
     // }
-})
 //DATABASE
 // mongoose.connect('mongodb://localhost:27017/CTA', {
 //     useNewUrlParser: true, 
@@ -67,6 +67,8 @@ db.once("open",()=>{
 })
 
 //MIDDLEWARES
+
+app.use(methodOverride('_method'))
 app.use(flash())
 app.set('view engine', 'ejs');
 app.set('views',path.join(__dirname,'/views'));
@@ -313,6 +315,7 @@ app.post('/change-picture/:id',upload.single('image'),isLoggedinU,(req,res)=>{
     // console.log(req.file);
     // console.log(`post id:${id}`);
     // console.log(req.file.filename);
+    console.log(req.file.path);
     User.findByIdAndUpdate(id,{image:req.file.path})
         .then(data=>{
             // console.log('Success yawa');
@@ -327,6 +330,96 @@ app.get('/client-profile',isLoggedinU,(req,res)=>{
 app.get('/client-profile/edit',isLoggedinU,(req,res)=>{
     const user = req.user
     res.render('users/ueditprofile',{user})
+})
+app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res)=>{
+    const user = req.user
+    
+    // console.log(req.file.path);
+    // const dets = await User.findByIdAndUpdate(user._id)
+    // console.log(req.body.img);
+    let newPass
+    User.findById(user._id,(err,user)=>{
+        
+        if(req.file.path === undefined && req.body.opassword===''){
+            console.log("1");
+         
+            // console.log(user._id);
+            User.updateOne({_id:user._id},{emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address}).then(data=>{
+                // console.log("data");
+                // console.log(data);
+                res.redirect('/client-dashboard')
+            })
+        } else if(req.file.path === undefined && req.body.opassword!== ''){
+            bcrypt.compare(req.body.opassword,user.password,(err,resz)=>{
+                if(err) return done(err)
+                if(resz==false){
+                    req.flash('error','Old Password isnt correct')
+                    res.redirect('/client-profile/edit')
+                }else{
+                    bcrypt.genSalt(10,function(err,salt){
+                        // if(err) return next()
+                        bcrypt.hash(req.body.password,salt,async function(err,hash){
+                            if(err){
+                                console.log("NI ERROR CHUY");
+                            }
+                            // console.log(req.body.password);
+                            newPass = await hash
+                            // console.log("NEWW PASS");
+                            // console.log(newPass);
+                            User.updateOne({_id:user._id},{password:newPass,emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address,}).then(data=>{
+                                // console.log("data");
+                                // console.log(data);
+                                res.redirect('/client-dashboard')
+                            })
+                            // console.log(hash);
+                        })
+                    })
+                }
+               
+            })
+          
+        }else if(req.body.opassword === '' && req.file.path !== undefined){
+            console.log("3");
+            // console.log(user._id);
+            User.updateOne({_id:user._id},{emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address,image:req.file.path}).then(data=>{
+              
+                res.redirect('/client-dashboard')
+            })
+        }
+        else if(req.body.opassword !== '' && req.file.path!==undefined){
+            console.log("4");
+            bcrypt.compare(req.body.opassword,user.password,(err,resz)=>{
+                if(err) return done(err)
+                if(resz==false){
+                    req.flash('error','Old Password isnt correct')
+                    res.redirect('/client-profile/edit')
+                }else{
+                    bcrypt.genSalt(10,function(err,salt){
+                        // if(err) return next()
+                        bcrypt.hash(req.body.password,salt,async function(err,hash){
+                            if(err){
+                                console.log("NI ERROR CHUY");
+                            }
+                            // console.log(req.body.password);
+                            newPass = await hash
+                            // console.log("NEWW PASS");
+                            // console.log(newPass);
+                            User.updateOne({_id:user._id},{password:newPass,emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address,image:req.file.path}).then(data=>{
+                                // console.log("data");
+                                // console.log(data);
+                                res.redirect('/client-dashboard')
+                            })
+                            // console.log(hash);
+                        })
+                    })
+                }
+               
+            })
+        }
+        
+    })
+
+
 })
 app.get('/logoutU',(req,res)=>{
     req.logOut()

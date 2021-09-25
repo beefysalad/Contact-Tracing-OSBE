@@ -1,0 +1,33 @@
+
+
+  <div>
+    <div class="col-lg-offset-1">
+        <img id="imgLogo" src="https://res.cloudinary.com/dhqqwdevm/image/upload/v1631437056/DEV/erwld6bygaifasmvvbo7.gif" style="height: 140px; width: 150px;" alt="Logo Image" />
+    </div>
+    <div class="col-lg-offset-1" style="margin-top: 5px;">
+        <input type="file" id="inputFile" size="10" />
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script>
+    $(function () {
+        $("#inputFile").change(function () {
+            readURL(this);
+        });
+    });
+
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                //alert(e.target.result);
+                $('#imgLogo').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script> 
+

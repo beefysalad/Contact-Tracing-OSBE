@@ -1,5 +1,5 @@
 <%- include('../partials/header') %> 
-<title>Document</title>
+<title>Editing Profile</title>
 <style>
     .image-container{
         height: 300px;
@@ -12,6 +12,7 @@
         height: 200px;
         border-radius: 50%;
         margin: 0 auto;
+        cursor: pointer;
     }
     .left-content{
         display: flex;
@@ -110,12 +111,13 @@
   
         <!-- Brand -->
         <a class="navbar-brand" href="#">
-          <img
+            CTT |
+          <!-- <img
             src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png"
             height="25"
             alt=""
             loading="lazy"
-          />
+          /> -->
         </a>
       
         <!-- Right links -->
@@ -144,13 +146,6 @@
               </li>
             </ul>
           </li>
-          <!-- Icon -->
-          <!-- <li class="nav-item me-3 me-lg-0">
-            <a class="nav-link" href="#">
-              <i class="fab fa-github fa-2x"></i>
-            </a>
-          </li> -->
-          <!-- Avatar -->
           <li class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle hidden-arrow d-flex align-items-center"
@@ -180,9 +175,9 @@
           </li>
         </ul>
       </div>
-      <!-- Container wrapper -->
+   
     </nav>
-    <!-- Navbar -->
+
   </header>
   <main style="margin-top: 58px;">
     <ol class="breadcrumb pt-4 px-3">
@@ -203,12 +198,12 @@
             </div>
             <div class="card-body" style="border: 1px solid black;">
                 <div class="container">
-                    <form action="#">
+                  <form action="/client-profile/edit?_method=PATCH" method="POST" enctype="multipart/form-data">
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="left-content mt-5">
-                                    <img src="<%=user.image%> " alt="user image" class="imagez img-fluid" onclick="changePic()">
-                                    <input type="file" name="img" id="img" class="form-control" style="display: none;">
+                                    <img src="<%=user.image%>" alt="user image" class="imagez img-fluid" onclick="changePic()">
+                                    <input type="file" name="img" id="img" style="display: none;" class="form-control" accept="image/png, image/jpeg, image/gif,image/jpg">
                                     <a href="#" class="text-center mt-2" onclick="changePic()">Edit Picture</a>  
                                 </div>
                                  
@@ -229,11 +224,11 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="emailAddress" class="form-label mt-3">Email Address</label>
-                                        <input type="text" name="emailAddress" id="emailAddress" class="form-control" value="<%=user.emailAddress%>">
+                                        <input type="email" name="emailAddress" id="emailAddress" class="form-control" value="<%=user.emailAddress%>" required>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="contactNumber" class="form-label mt-3">Contact Number</label>
-                                        <input type="number" name="contactNumber" id="contactNumber" class="form-control" value="<%=user.contactNumber%>">
+                                        <input type="number" name="contactNumber" id="contactNumber" class="form-control" value="<%=user.contactNumber%>" required>
                                     </div>
                                 </div>
                             </div>
@@ -242,10 +237,15 @@
                             <div class="col-md-1"></div>
                             <div class="col-md-5">
                                 <label for="address" class="form-label mt-3">Home Address</label>
-                                <input type="text" name="address" id="address" class="form-control" value="<%=user.address%>">
+                                <input type="text" name="address" id="address" class="form-control" value="<%=user.address%>" required>
                             </div>
                             <div class="col-md-3">
-                                <label for="opassword" class="form-label mt-3">Old Password</label>
+                                <% if (messages.error) { %>
+                                  <label for="opassword" class="form-label mt-3" style="color: red;">Incorrect Password</label>
+                                <% } else { %>
+                                  <label for="opassword" class="form-label mt-3">Old Password</label>
+                                <% } %>
+                                
                                 <input type="password" name="opassword" id="opassword" class="form-control" placeholder="Old Password">
                             </div>
                             <div class="col-md-3">
@@ -258,14 +258,15 @@
                             </div>
                             <div class="col-md-10"></div>
                             <div class="col-md-2">
-                                <a href="#" class="btn-danger btn">Submit Changes</a>
+                              <button class="btn-danger btn">Submit Changes</button>
+                                <!-- <a href="#" class="btn-danger btn">Submit Changes</a> -->
                             </div>
                            
                         </div>
           
                         
                     </form>
-                   
+                  
                 </div>
             </div>
         </div>
@@ -275,9 +276,7 @@
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap5.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap5.min.css">
+
 <script>
     function changePic(){
         document.querySelector('#img').click()
@@ -297,6 +296,35 @@
             document.querySelector('.right-content').classList.remove('ms-4')
         }
     }
+    const image = document.querySelector('.imagez')
+    $(function () {
+        $("#img").change(function () {
+            readURL(this);
+        });
+    });
+
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                //alert(e.target.result);
+                $('.imagez').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    setInterval(()=>{
+        // console.log(image.value);
+        const password = document.querySelector('#opassword')
+        if(password.value!==''){
+          document.querySelector('#password').disabled = false
+        }else{
+          document.querySelector('#password').disabled = true
+        }
+    },1000)
 </script>
 
 </body>
