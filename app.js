@@ -205,10 +205,10 @@ app.get('/establishments-scanqr/:cam_num',isLoggedin,(req,res)=>{
     res.render('establishments/escanner',{cam_num,user})
 })
 app.get('/establishments-login',isLoggedOut,(req,res)=>{
-    res.render('establishments/elogin')
+    res.render('establishments/login')
 })
 app.get('/establishments-registration',isLoggedOut,(req,res)=>{
-    res.render('establishments/eregister')
+    res.render('establishments/register')
 })
 app.get('/establishments-dashboard',isLoggedin,async (req,res)=>{
     
@@ -267,7 +267,7 @@ app.post('/give-qr/:cam_num',(req,res)=>{
     })
 })
 app.post('/eregister',(req,res)=>{
-    const{businessnumber,cperson,cnumber,username,email,password} = req.body
+    const{businessnumber,cperson,cnumber,username,email,password,businessname} = req.body
     Establishment.findOne({username:username},(err,user)=>{
         if(user){
             req.flash('error','Username already taken!')
@@ -281,6 +281,7 @@ app.post('/eregister',(req,res)=>{
                     const date = new Date()
                     const newEstablish = new Establishment({
                         businessnumber: businessnumber,
+                        businessname: businessname,
                         contactPerson: cperson,
                         contactNumber: cnumber,
                         username: username,
