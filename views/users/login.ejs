@@ -1,0 +1,203 @@
+<%- include('../partials/header') %> 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet"/>
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet"/>
+        <!-- MDB -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet"/>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <!-- MDB -->
+        <script type="text/javascript"src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
+        <style>
+            .left-content{
+                /* background-color: white; */
+                width: 700px;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 5px 5px 34px black;
+                margin: 0 auto;
+                /* height: 500px; */
+            }
+            .formz{
+            padding: 20px;
+            }
+            .but{
+                transition: 0.2s;
+            }
+            .but:hover,.but:focus{
+                transform: translateY(-0.25em);
+            }
+           
+            #introCarousel,
+            .carousel-inner,
+            .carousel-item,
+            .carousel-item.active {
+                height: 100vh;
+            }
+
+            .carousel-item:nth-child(1) {
+                background-image: url('/images/bgestablishment.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center center;
+            }
+
+            /* Height for devices larger than 576px */
+            @media (min-width: 992px) {
+                #introCarousel {
+                margin-top: -58.59px;
+                }
+            }
+
+            .navbar .nav-link {
+                color: #fff !important;
+            }
+            @media (max-width: 710px) {
+                .left-content{
+                    width: 450px;
+                }
+            }
+            @media (max-width: 500px) {
+                .left-content{
+                    width: 350px;
+                    padding: 15px;
+                }
+            }
+        </style>
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <nav class="sticky-top navbar navbar-expand-lg navbar-dark d-none d-lg-block" style="z-index: 2000;">
+            <div class="container-fluid">
+           
+              <a class="navbar-brand nav-link" href="#">
+                <strong>CCT | Contactless Establishment Tracing</strong>
+              </a>
+              <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarExample01"
+                aria-controls="navbarExample01" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+              </button>
+              <div class="collapse navbar-collapse" id="navbarExample01">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  <li class="nav-item active">
+                    <a class="nav-link" aria-current="page" href="#intro">Home</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" href="#">About us</a>
+                  </li>
+                  <li class="nav-item dropdown">
+                    <a
+                      class="nav-link dropdown-toggle"
+                      href="#"
+                      id="navbarDropdownMenuLink"
+                      role="button"
+                      data-mdb-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      User Portals
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <li>
+                        <a class="dropdown-item" href="#">User Portal</a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="#">Establishment Portal</a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item" href="#">Main Dashboard</a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+    
+                <ul class="navbar-nav d-flex flex-row">
+                 
+                  <li class="nav-item me-3 me-lg-0">
+                    <a class="nav-link" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" rel="nofollow"
+                      target="_blank">
+                      <i class="fab fa-youtube"></i>
+                    </a>
+                  </li>
+                  <li class="nav-item me-3 me-lg-0">
+                    <a class="nav-link" href="#" rel="nofollow" >
+                      <i class="fab fa-facebook-f"></i>
+                    </a>
+                  </li>
+                  <li class="nav-item me-3 me-lg-0">
+                    <a class="nav-link" href="#" rel="nofollow">
+                      <i class="fab fa-twitter"></i>
+                    </a>
+                  </li>
+                  <li class="nav-item me-3 me-lg-0">
+                    <a class="nav-link" href="https://github.com/beefysalad/Contact-Tracing-OSBE" rel="nofollow" target="_blank">
+                      <i class="fab fa-github"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+    
+        <div id="introCarousel" class="carousel slide carousel-fade shadow-2-strong" data-mdb-ride="carousel" data-interval="100">
+    
+          <div class="carousel-inner">
+        
+            <div class="carousel-item active">
+              <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <div class="left-content bg-light">
+                        <h4 class="text-dark text-center mt-3">User Portal</h4>
+                        <form action="/client-login" method="POST">
+                            <div class="container">
+                                <div class="row d-flex justify-content-center flex-column formz">
+                                    <% if (messages.error) { %>
+                                        <h4 class="text-danger"><%= messages.error %> </h4>
+                                    <% } %>
+                                    <div class="col">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input class="form-control" type="text" name="username" id="username" placeholder="Username" required>
+                                    </div>
+                                    <div class="col mt-4">
+                                        <label for="password" class="form-label">Password</label>
+                                        <input class="form-control" type="password" name="password" id="password" placeholder="Password" required>
+                                    </div>
+                                    <div class="form-check col mt-4 mx-3">
+                                        <input class="form-check-input" type="checkbox" name="shp" value="ah" id="shp">
+                                        <label class="form-check-label" for="shp">Show Password</label>
+                                    </div>
+                                    <button class="btn btn-dark mt-3 but">Log-in</button>
+                                    <hr class="mt-4">
+                                    <div class="form-text text-center">
+                                        Dont have an account yet? <a href="/client-register">Sign up</a>
+                                    </div>
+                                    <div class="form-text text-center">
+                                        <a href="#">Forgot Password</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <script>
+        const shp = document.querySelector('#shp')
+        const password = document.querySelector('#password')
+        shp.value = 'on'
+        shp.addEventListener('change',()=>{
+            if(shp.value==='on'){
+                password.setAttribute('type','text')
+               
+                shp.value='off'
+            }else if(shp.value==='off'){
+                password.setAttribute('type','password')
+               
+                shp.value='on'
+            }
+        })
+    </script>
+</body>
+</html>

@@ -7,6 +7,10 @@ const establishmentSchema = new Schema({
         type: String,
         required: true
     },
+    businessname:{
+        type:String,
+        required: true
+    },
     contactPerson:{
         type:String,
         required: true

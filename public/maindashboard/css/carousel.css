@@ -20,6 +20,7 @@
 }
 .carousel-item:nth-child(3) {
   background-image: url('../img/main4.jpg');
+  
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;

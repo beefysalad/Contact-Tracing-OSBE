@@ -344,7 +344,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
             // console.log(user._id);
             User.updateOne({_id:user._id},{emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address}).then(data=>{
                
-                res.redirect('/client-dashboard')
+                res.redirect('/client-profile')
             })
         } 
         // else if(req.file.path === undefined && req.body.opassword != '')
@@ -370,7 +370,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
                             User.updateOne({_id:user._id},{password:newPass,emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address,}).then(data=>{
                                 // console.log("data");
                                 // console.log(data);
-                                res.redirect('/client-dashboard')
+                                res.redirect('/client-profile')
                             })
                             // console.log(hash);
                         })
@@ -387,7 +387,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
             // console.log(user._id);
             User.updateOne({_id:user._id},{emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address,image:req.file.path}).then(data=>{
               
-                res.redirect('/client-dashboard')
+                res.redirect('/client-profile')
             })
         }
         // else if(req.body.opassword != '' && req.file.path !==undefined)
@@ -413,7 +413,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
                             User.updateOne({_id:user._id},{password:newPass,emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address,image:req.file.path}).then(data=>{
                                 // console.log("data");
                                 // console.log(data);
-                                res.redirect('/client-dashboard')
+                                res.redirect('/client-profile')
                             })
                             // console.log(hash);
                         })
@@ -432,10 +432,10 @@ app.get('/logoutU',(req,res)=>{
     res.redirect('/client-login')
 })
 app.get('/client-login',isLoggedOutU,(req,res)=>{
-    res.render('users/ulogin')
+    res.render('users/login')
 })
 app.get('/client-register',isLoggedOutU,(req,res)=>{
-    res.render('users/uregister')
+    res.render('users/register')
 })
 app.get('/client-dashboard',isLoggedinU,(req,res)=>{
     const user = req.user
