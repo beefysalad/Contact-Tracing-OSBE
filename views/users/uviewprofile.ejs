@@ -1,12 +1,6 @@
 <%- include('../partials/header') %> 
 <title>User Profile</title>
 <style>
-    .image-container{
-        height: 300px;
-        width: 300px;
-        background-color: red;
-        border: 2px solid black;
-    }
     .imagez{
         width: 200px;
         height: 200px;
@@ -131,7 +125,7 @@
               data-mdb-toggle="dropdown"
               aria-expanded="false"
             >
-              <i class="fas fa-bell fa-2x"></i>
+              <i class="fas fa-bell"></i>
               <span class="badge rounded-pill badge-notification bg-danger">1</span>
             </a>
             <ul
@@ -164,8 +158,8 @@
               <img
                 src="<%=user.image%>"
                 class="rounded-circle"
-                height="30"
-                width="30"
+                height="25"
+                width="25"
                 alt=""
                 loading="lazy"
               />
@@ -258,7 +252,7 @@
                             </div>
                             <div class="col-md-10"></div>
                             <div class="col-md-2">
-                                <a href="/client-profile/edit" class="btn-info btn">Edit Profile</a>
+                                <a href="/client-profile/edit" class="btn-dark btn">Edit Profile</a>
                             </div>
                            
                         </div>

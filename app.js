@@ -98,10 +98,10 @@ passport.use(new localStrategy(function(username,password,done){
     User.findOne({username:username},(err,user)=>{
         if(err) return done(err)
         // console.log(`passed username from clogin is : ${username}`);
-        if(!user) return done(null,false,{message:'Invalid username or password d!'})
+        if(!user) return done(null,false,{message:'Invalid username or password!'})
         bcrypt.compare(password,user.password,(err,res)=>{
             if(err) return done(err)
-            if(res==false) return done(null,false,{message:'Invalid username or password d!'})
+            if(res==false) return done(null,false,{message:'Invalid username or password!'})
             return done(null,user)
         })
     })
@@ -333,23 +333,24 @@ app.get('/client-profile/edit',isLoggedinU,(req,res)=>{
 })
 app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res)=>{
     const user = req.user
-    
-    // console.log(req.file.path);
-    // const dets = await User.findByIdAndUpdate(user._id)
-    // console.log(req.body.img);
     let newPass
     User.findById(user._id,(err,user)=>{
         
-        if(req.file.path === undefined && req.body.opassword===''){
+        // if(req.file.path === undefined && req.body.opassword == '')
+        if((! req.file || ! req.file.path) && req.body.opassword == '')
+        {
             console.log("1");
          
             // console.log(user._id);
             User.updateOne({_id:user._id},{emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address}).then(data=>{
-                // console.log("data");
-                // console.log(data);
+               
                 res.redirect('/client-dashboard')
             })
-        } else if(req.file.path === undefined && req.body.opassword!== ''){
+        } 
+        // else if(req.file.path === undefined && req.body.opassword != '')
+        else if((! req.file || ! req.file.path) && req.body.opassword != '')
+        {
+            console.log("2");
             bcrypt.compare(req.body.opassword,user.password,(err,resz)=>{
                 if(err) return done(err)
                 if(resz==false){
@@ -378,7 +379,10 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
                
             })
           
-        }else if(req.body.opassword === '' && req.file.path !== undefined){
+        }
+        // else if(req.body.opassword == '' && req.file.path !== undefined)
+        else if(req.body.opassword == '' && (req.file.path || req.file))
+        {
             console.log("3");
             // console.log(user._id);
             User.updateOne({_id:user._id},{emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address,image:req.file.path}).then(data=>{
@@ -386,7 +390,9 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
                 res.redirect('/client-dashboard')
             })
         }
-        else if(req.body.opassword !== '' && req.file.path!==undefined){
+        // else if(req.body.opassword != '' && req.file.path !==undefined)
+        else if(req.body.opassword != '' && (req.file.path || req.file))
+        {
             console.log("4");
             bcrypt.compare(req.body.opassword,user.password,(err,resz)=>{
                 if(err) return done(err)

@@ -1,12 +1,6 @@
 <%- include('../partials/header') %> 
 <title>Editing Profile</title>
 <style>
-    .image-container{
-        height: 300px;
-        width: 300px;
-        background-color: red;
-        border: 2px solid black;
-    }
     .imagez{
         width: 200px;
         height: 200px;
@@ -18,7 +12,6 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        
     }
     .m-content{
         margin-top: 10vh;
@@ -27,7 +20,8 @@
         .m-content{
             margin-top: 0;
         }
-    }
+      
+      }
 </style>
 <link rel="stylesheet" href="/css/usersidebar.css">
  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
@@ -132,7 +126,7 @@
               data-mdb-toggle="dropdown"
               aria-expanded="false"
             >
-              <i class="fas fa-bell fa-2x"></i>
+              <i class="fas fa-bell"></i>
               <span class="badge rounded-pill badge-notification bg-danger">1</span>
             </a>
             <ul
@@ -158,8 +152,8 @@
               <img
                 src="<%=user.image%>"
                 class="rounded-circle"
-                height="30"
-                width="30"
+                height="25"
+                width="25"
                 alt=""
                 loading="lazy"
               />
@@ -202,8 +196,8 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <div class="left-content mt-5">
-                                    <img src="<%=user.image%>" alt="user image" class="imagez img-fluid" onclick="changePic()">
-                                    <input type="file" name="img" id="img" style="display: none;" class="form-control" accept="image/png, image/jpeg, image/gif,image/jpg">
+                                    <img src="<%=user.image%>" alt="user image" class="imagez" onclick="changePic()">
+                                    <input type="file" name="img" id="img"  class="form-control" accept="image/png, image/jpeg, image/gif,image/jpg">
                                     <a href="#" class="text-center mt-2" onclick="changePic()">Edit Picture</a>  
                                 </div>
                                  
@@ -296,7 +290,7 @@
             document.querySelector('.right-content').classList.remove('ms-4')
         }
     }
-    const image = document.querySelector('.imagez')
+    const image = document.querySelector('#img')
     $(function () {
         $("#img").change(function () {
             readURL(this);
