@@ -13,6 +13,12 @@
         border-radius: 50%;
         margin: 0 auto;
     }
+    .notify{
+            border-bottom: 1px solid gainsboro;
+        }
+        .account-settings{
+            border-bottom: 1px solid gainsboro;
+        }
     .left-content{
         display: flex;
         flex-direction: column;
@@ -132,17 +138,33 @@
               aria-expanded="false"
             >
               <i class="fas fa-bell fa-2x"></i>
-              <span class="badge rounded-pill badge-notification bg-danger">1</span>
+              <% if (user.notification.length!==0) { %>
+                <% let badge=0%> 
+                <% for( let index = 0; index < user.notification.length; index++ ) { %>
+                    <% if (!user.notification[index].isSeen) { %>
+                        <% badge++ %> 
+                    <% } %>
+                <% } %>
+                <span class="badge rounded-pill badge-notification bg-danger"><%= badge %> </span>
+              <% } %>
             </a>
-            <ul
-              class="dropdown-menu dropdown-menu-end"
-              aria-labelledby="navbarDropdownMenuLink"
-            >
-              <li><a class="dropdown-item" href="#">To do pani diri</a></li>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                <% if (user.notification.length!==0) { %>
+                    <% for( let index = 0; index < user.notification.length; index++ ) { %>
+                      <% if (!user.notification[index].isSeen) { %>
+                        <li class="notify"><a class="dropdown-item"><%= user.notification[index].message %> </a></li>
+                    <% } %>
+                     <% } %>
+                <% } else { %>
+                        <li><a class="dropdown-item">You dont have any notifications</a></li>
+                <% } %>
+               
+                <li><a href="#" class="dropdown-item text-center notify text-primary">View All</a></li>
+              <!-- <li><a class="dropdown-item" href="#">To do pani diri</a></li>
               <li><a class="dropdown-item" href="#">To do pani diri</a></li>
               <li>
                 <a class="dropdown-item" href="#">Topi ngano bakat imoha</a>
-              </li>
+              </li> -->
             </ul>
           </li>
           <!-- Icon -->
@@ -174,9 +196,9 @@
               class="dropdown-menu dropdown-menu-end"
               aria-labelledby="navbarDropdownMenuLink"
             >
-              <li><a class="dropdown-item" href="#"><%=user.firstName%> <%=user.lastName%> </a></li>
-              <li><a class="dropdown-item" href="/client-profile">My profile</a></li>
-              <li><a class="dropdown-item" href="/logoutU">Logout</a></li>
+              <li class="account-settings"><a class="dropdown-item" href="#"><%=user.firstName%> <%=user.lastName%> </a></li>
+              <li class="account-settings"><a class="dropdown-item" href="/client-profile">My profile</a></li>
+              <li class="account-settings"><a class="dropdown-item" href="/logoutU">Logout</a></li>
             </ul>
           </li>
         </ul>

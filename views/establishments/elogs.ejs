@@ -25,6 +25,9 @@
         height: 30px;
         border-radius: 50%;
     }
+    .user-name{
+        text-decoration: none;
+    }
     table.dataTable thead>tr>th.sorting_asc,
     table.dataTable thead>tr>th.sorting_desc,
     table.dataTable thead>tr>th.sorting,
@@ -147,7 +150,7 @@
                                                 <tr>
                                                     <td class="current_logs"> <b><%= index+1 %></b> </td>
                                                     <td class="current_logs"><img class="control" src="<%=arr[index].image%>" alt=""></td>
-                                                    <td class="current_logs"><%= arr[index].firstName %> <%= arr[index].lastName %></td>
+                                                    <td class="current_logs"><a href="#" class="user-name"><%= arr[index].firstName %> <%= arr[index].lastName %></a></td>
                                                     <td class="current_logs"><%= moment().diff(new Date(arr[index].birthDate).toISOString(),'years') %> </td>
                                                     <td class="current_logs">Not Infected</td>
                                                     <td class="current_logs"><%= data.logs[index].date %></td>

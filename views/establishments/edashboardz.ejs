@@ -12,6 +12,9 @@
     .crt{
         display: none;
     }
+    .user-name{
+        text-decoration: none;
+    }
     .dataTable > thead > tr > th[class*=sort]:after{ display:none; }
     .targetz{
         background-color: rgb(13, 110, 253);
@@ -147,7 +150,7 @@
                                                     <tr>
                                                         <td class="current_logs"> <b><%= index+1 %></b> </td>
                                                         <td class="current_logs"><img class="control" src="<%=arr[index].image%>" alt=""></td>
-                                                        <td class="current_logs"><%= arr[index].firstName %> <%= arr[index].lastName %></td>
+                                                        <td class="current_logs"><a href="#" class="user-name"><%= arr[index].firstName %> <%= arr[index].lastName %></a></td>
                                                         <td class="current_logs"><%= moment().diff(arr[index].birthDate,'years') %> </td>
                                                         <td class="current_logs">Not Infected</td>
                                                         <td class="current_logs"><%= data.logs[index].date %></td>

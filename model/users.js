@@ -1,7 +1,18 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-
+const notifications = new Schema({
+    _id:false,
+    message:{
+        type: String
+    },
+    isSeen:{
+        type:Boolean
+    },
+    date:{
+        type:String
+    }
+})
 const userSchema = new Schema({
     firstName: {
         type: String,
@@ -46,7 +57,8 @@ const userSchema = new Schema({
     image:{
         data: Buffer,
         type: String
-    }
+    },
+    notification:[notifications]
 })
 
 module.exports = mongoose.model('user',userSchema)

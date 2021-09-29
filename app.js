@@ -18,7 +18,6 @@ const moment = require('moment')
 const dotenv = require('dotenv')
 const cloudinary = require('cloudinary').v2
 const {CloudinaryStorage} = require('multer-storage-cloudinary')
-
 dotenv.config()
 console.clear()
 //MULTER FOR STORAGING IMAGE
@@ -182,6 +181,7 @@ passport.deserializeUser(function(id,done){
 //ROUTES
 //ROUTE FOR MAIN
 app.get('/',(req,res)=>{
+    
     res.render('main/maindash')
 })
 //ROUTE FOR ESTABLISHMENTS
