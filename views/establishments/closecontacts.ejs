@@ -1,5 +1,5 @@
 <%- include('../partials/header') %> 
-<title>Daily Logs</title>
+<title>All Logs</title>
 <style>
     .control{
         width: 40px;
@@ -12,10 +12,6 @@
     .crt{
         display: none;
     }
-    .user-name{
-        text-decoration: none;
-    }
-    .dataTable > thead > tr > th[class*=sort]:after{ display:none; }
     .targetz{
         background-color: rgb(13, 110, 253);
     }
@@ -29,18 +25,24 @@
         height: 30px;
         border-radius: 50%;
     }
-    table.dataTable thead .sorting:after,
-    table.dataTable thead .sorting_asc:after,
-    table.dataTable thead .sorting_desc:after,
-    table.dataTable thead .sorting:before,
-    table.dataTable thead .sorting_asc:before,
-    table.dataTable thead .sorting_desc:before {
-        display: none;
+    .user-name{
+        text-decoration: none;
     }
+    table.dataTable thead>tr>th.sorting_asc,
+    table.dataTable thead>tr>th.sorting_desc,
+    table.dataTable thead>tr>th.sorting,
+    table.dataTable thead>tr>td.sorting_asc,
+    table.dataTable thead>tr>td.sorting_desc,
+    table.dataTable thead>tr>td.sorting {
+        padding-right: 8px;
+    }
+    
+    th.sorting_asc::after,
+    th.sorting_desc::after {
+    content:"" !important;
+    }
+    .dataTable > thead > tr > th[class*=sort]:after{ display:none; }
     @media (max-width: 376px){
-        body{
-            background-color: pink;
-        }
         tr{
             font-size: 10px;
         }
@@ -86,8 +88,8 @@
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="#">Todays Logs</a>
-                                <a class="nav-link" href="/establishments-logs/<%= user._id %> ">All Logs</a>
+                                <a class="nav-link" href="/establishments-dashboard">Todays Logs</a>
+                                <a class="nav-link" href="/establishments-logs/<%=user._id%> ">All Logs</a>
                                 
                             </nav>
                         </div>
@@ -113,11 +115,9 @@
             <main>
                 <div class="container-fluid px-4">
                     <div class="card mt-5">
-                        <div class="card-header current_day">
+                        <div class="card-header">
                             <i class="fas fa-table me-1"></i>
-                            <!-- Daily Logs -->Daily logs for
-                            <%= day %> 
-                            
+                            Close Contacts 
                         </div>
                         <div class="card-body">
                             <table class="table table-light table-striped table-hover" id="example" style="width: 100%">
@@ -144,37 +144,37 @@
                                     </tr>
                                 </tfoot>
                                 <tbody>
-                                    <% if (data && arr) { %>
-                                        <% for( let index = 0; index < data.logs.length; index++ ) { %>
-                                                <% if (data.logs[index].date === currentDate) { %>
-                                                    <tr>
-                                                        <td class="current_logs"> <b><%= index+1 %></b> </td>
-                                                        <td class="current_logs"><img class="control" src="<%=arr[index].image%>" alt=""></td>
-                                                        <td class="current_logs"><a href="/establishments-user-profile/<%= arr[index]._id%>/<%=moment(data.logs[index].date).format('LL') %>" class="user-name"><%= arr[index].firstName %> <%= arr[index].lastName %></a></td>
-                                                        <td class="current_logs"><%= moment().diff(arr[index].birthDate,'years') %> </td>
-                                                        <% if (arr[index].status === 'Negative') { %>
-                                                            <td class="current_logs text-success"><%=arr[index].status %></td>
-                                                        <% } else if(arr[index].status === 'Positive') { %>
-                                                            <td class="current_logs text-danger"><%=arr[index].status %></td>
-                                                        <% } else if(arr[index].status === 'Close Contact') {%>
-                                                            <td class="current_logs text-warning"><%=arr[index].status %></td>
-                                                        <% } %>
-                                                        
-                                                        <td class="current_logs"><%= data.logs[index].date %></td>
-                                                        <td class="current_logs"><%= data.logs[index].time %> </td>
-                                                    </tr>
-                                                <% } %>
+                                    <% if (temp  && arr) { %>
+                                        <% for( let index = 0; index < temp.length; index++ ) { %>
+                                                <!-- put condition here to check if theyre logged on the current date -->
+                                                <tr>
+                                                    <td class="current_logs"> <b><%= index+1 %></b> </td>
+                                                    <td class="current_logs"><img class="control" src="<%=arr[index].image%>" alt=""></td>
+                                                    <td class="current_logs"><a href="/establishments-user-profile/<%= arr[index]._id%>/<%=moment(temp[index].date).format('LL') %>" class="user-name"><%= arr[index].firstName %> <%= arr[index].lastName %></a></td>
+                                                    <td class="current_logs"><%= moment().diff(new Date(arr[index].birthDate).toISOString(),'years') %> </td>
+                                                    <% if (arr[index].status === 'Negative') { %>
+                                                        <td class="current_logs text-success"><%=arr[index].status %></td>
+                                                    <% } else if(arr[index].status === 'Positive') { %>
+                                                        <td class="current_logs text-danger"><%=arr[index].status %></td>
+                                                    <% } else if(arr[index].status === 'Close Contact') {%>
+                                                        <td class="current_logs text-warning"><%=arr[index].status %></td>
+                                                    <% } %>
+                                                    <td class="current_logs"><%= temp[index].date %></td>
+                                                    <td class="current_logs"><%= temp[index].time %> </td>
+                                                </tr>
                                         <% } %>
                                     <% } %>
                                 </tbody>
                             </table>
-                            <a href="/establishments-dashboard" class="btn btn-primary">Go Back</a>
+                            <a href="#" class="btn btn-dark">Send Notifications</a>
+                            <a href="#" class="btn btn-primary">Change Status</a>
                             <button class="btn btn-warning" onclick="ExportToExcel('xlsx')">Convert to excel</button>
+                            
                         </div>
                     </div>
                     
                 </div>
-
+                
             </main>
             <footer class="py-4 bg-light mt-3">
                
@@ -183,10 +183,6 @@
     </div>
 
     <%- include('../partials/scripts') %> 
-    
 
-</script>
 </body>
 </html>
-
-

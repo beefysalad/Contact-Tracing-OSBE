@@ -150,9 +150,15 @@
                                                 <tr>
                                                     <td class="current_logs"> <b><%= index+1 %></b> </td>
                                                     <td class="current_logs"><img class="control" src="<%=arr[index].image%>" alt=""></td>
-                                                    <td class="current_logs"><a href="#" class="user-name"><%= arr[index].firstName %> <%= arr[index].lastName %></a></td>
+                                                    <td class="current_logs"><a href="/establishments-user-profile/<%= arr[index]._id%>/<%=moment(data.logs[index].date).format('LL') %>" class="user-name"><%= arr[index].firstName %> <%= arr[index].lastName %></a></td>
                                                     <td class="current_logs"><%= moment().diff(new Date(arr[index].birthDate).toISOString(),'years') %> </td>
-                                                    <td class="current_logs">Not Infected</td>
+                                                    <% if (arr[index].status === 'Negative') { %>
+                                                        <td class="current_logs text-success"><%=arr[index].status %></td>
+                                                    <% } else if(arr[index].status === 'Positive') { %>
+                                                        <td class="current_logs text-danger"><%=arr[index].status %></td>
+                                                    <% } else if(arr[index].status === 'Close Contact') {%>
+                                                        <td class="current_logs text-warning"><%=arr[index].status %></td>
+                                                    <% } %>
                                                     <td class="current_logs"><%= data.logs[index].date %></td>
                                                     <td class="current_logs"><%= data.logs[index].time %> </td>
                                                 </tr>

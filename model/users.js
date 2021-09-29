@@ -58,7 +58,11 @@ const userSchema = new Schema({
         data: Buffer,
         type: String
     },
-    notification:[notifications]
+    notification:[notifications],
+    status:{
+        type:String,
+        required: true
+    }
 })
 
 module.exports = mongoose.model('user',userSchema)

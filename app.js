@@ -210,6 +210,34 @@ app.get('/establishments-login',isLoggedOut,(req,res)=>{
 app.get('/establishments-registration',isLoggedOut,(req,res)=>{
     res.render('establishments/register')
 })
+app.get('/establishments-user-profile/:id/:datez',isLoggedin,async (req,res)=>{
+    const {id,datez} = req.params
+    const user = req.user
+    const userData = await User.findOne({_id:id})
+    res.render('establishments/euserprofile',{user,userData,datez,moment:moment})
+})
+app.get('/establishments-get-close-contact/:id/:datez',isLoggedin,async(req, res)=>{
+    const {id,datez} = req.params
+    const user = req.user
+    const data = await Log.findOne({_id:user._id})
+    const temp = []
+    const arr = []
+    for(let i=0; i<data.logs.length; i++){
+        if(moment(data.logs[i].date).format('LL') === datez && data.logs[i].id !== id){
+            temp.push(data.logs[i])
+        }
+    }
+    for(let i=0; i<temp.length; i++){
+        const d = await User.findOne({_id:temp[i].id})
+        arr.push(d)
+    }
+    res.render('establishments/closecontacts',{user,temp,arr,moment:moment})
+})
+app.post('/establishments-update-user-status/:id',isLoggedin,async(req,res)=>{
+    const {id} = req.params
+    const update = await User.updateOne({_id:id},{status:req.body.status})
+    res.redirect(`/establishments-user-profile/${id}`)
+})
 app.get('/establishments-dashboard',isLoggedin,async (req,res)=>{
     
     const user = req.user
@@ -226,7 +254,6 @@ app.get('/establishments-dashboard',isLoggedin,async (req,res)=>{
     let day = moment(new Date()).format('LL') //.format('MMM DD YYYY')
     
     // console.log(req.user);
-    
     res.render('establishments/edashboardz',{data,currentDate,arr,user,day,moment:moment})
 })
 app.get('/logoutE',(req,res)=>{
@@ -490,6 +517,7 @@ app.post('/client-register',(req,res)=>{
                         username:username,
                         password: hash,
                         image: genPic,
+                        status: "Not Infected",
                         dateOfRegistration: `${moment(new Date()).format('MM/DD/YYYY')} ${moment(new Date()).format('hh:mm:ss A')}`
                     })
                     let id

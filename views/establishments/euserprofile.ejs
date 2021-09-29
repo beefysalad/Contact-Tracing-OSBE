@@ -1,0 +1,206 @@
+    <%- include('../partials/header') %> 
+    <title>Viewing <%= userData.firstName %> <%= userData.lastName %> </title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .test{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+    }
+    .test2{
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    }
+    .imagez{
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+        margin: 0 auto;
+    }
+    .left-content{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        
+    }
+    #second{
+        display: none;
+    }
+    .main-container{
+        display: flex;
+        flex-direction: column;
+    }
+    .button-container{
+        align-self: flex-end;
+    }
+    </style>
+</head>
+<body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+        <!-- Navbar Brand-->
+        <a class="navbar-brand ps-3" href="#">CCT |</a>
+        <!-- Sidebar Toggle-->
+        <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+        <!-- Navbar-->
+        <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                    <li><a class="dropdown-item" href="#!"><img src="/images/test.png" alt="" class="test">   Account Settings</a></li>
+                    <li><hr class="dropdown-divider" /></li>
+                    <li><a class="dropdown-item" href="/logoutE">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sb-sidenav accordion sb-sidenav-dark targetz" id="sidenavAccordion">
+                <div class="sb-sidenav-menu">
+                    <div class="nav">
+                        <div class="sb-sidenav-menu-heading">Main</div>
+                        <a class="nav-link" href="/establishments-logs/<%= user._id %> ">
+                            <div class="sb-nav-link-icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            Dashboard
+                        </a>
+                        <div class="sb-sidenav-menu-heading">Functionalities</div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                            Customer Logs
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="#">Todays Logs</a>
+                                <a class="nav-link" href="/establishments-logs/<%= user._id %> ">All Logs</a>
+                                
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutz" aria-expanded="false" aria-controls="collapseLayouts">
+                            <div class="sb-nav-link-icon"><i class="fas fa-camera"></i></i></div>
+                            Scan QR Code
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayoutz" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav cameras_but">
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="sb-sidenav-footer py-2">
+                    <div class="small">Logged in as:</div>
+                    <img src="/images/test.png" alt="" class="test2">
+                    <%= user.businessname %>
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <div class="container-fluid px-4">
+                    <div class="card mt-5">
+                        <div class="card-header">
+                            <i class="fas fa-user"></i>
+                            User Profile
+                        </div>
+                        <div class="card-body main-container">
+                            <div class="container">
+                                <form action="/establishments-update-user-status/<%=userData._id%> " method="POST" id="status-form">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <div class="left-content mt-5">
+                                                <img src="<%=userData.image%> " alt="user image" class="imagez">
+                                                <input type="file" name="img" id="img" class="form-control" style="display: none;">
+                                                <!-- <a href="#" class="text-center mt-2" onclick="changePic()">Edit Picture</a>   -->
+                                            </div>
+                                             
+                                        </div>
+                                        <div class="col-md-9">
+                                            <div class="right-content row">
+                                                <div class="col-md-6">
+                                                    <label for="firstName" class="form-label mt-4">First Name</label>
+                                                    <input type="text" name="firstName" id="firstName" class="form-control" readonly value="<%=userData.firstName%> ">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="lastName" class="form-label mt-4">Last Name</label>
+                                                    <input type="text" name="lastName" id="lastName" class="form-control" readonly value="<%= userData.lastName %> ">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="emailAddress" class="form-label mt-3">Email Address</label>
+                                                    <input type="text" name="emailAddress" id="emailAddress" class="form-control" readonly value="<%= userData.emailAddress %> ">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="contactNumber" class="form-label mt-3">Contact Number</label>
+                                                    <input type="text" name="contactNumber" id="contactNumber" class="form-control" readonly value="<%= userData.contactNumber %> ">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="address" class="form-label mt-3">Home Address</label>
+                                                    <input type="text" name="address" id="address" class="form-control" readonly value="<%=userData.address%>">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label for="status" class="form-label mt-3">Status</label>
+                                                    <select required id="status" name="status" class="form-select" aria-label="Default select example" disabled>
+                                                        <option value="" selected disabled hidden><%=userData.status%> </option>
+                                                        <option value="Negative">Negative</option>
+                                                        <option value="Positive">Positive</option>
+                                                        <option value="Close Contact">Close Contact</option>
+                                                    </select>
+                                                    <!-- <input type="text" name="status" id="status" class="form-control" readonly value="<%= userData.status %> "> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>    
+                                </form>
+                                
+                            </div>
+                            <hr>
+                            <div class="button-container">
+                                <a href="/establishments-get-close-contact/<%=userData._id%>/<%=datez%>" class="btn btn-primary">Get Possible Close Contacts</a>
+                                <!-- <button class="btn btn-primary first">Get Possible Close Contacts</button> -->
+                                <button class="btn btn-danger first change">Change Status</button>
+                                <button class="btn btn-success" id="second">Update</button>
+                                <button class="btn btn-dark" id="second">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+            <footer class="py-4 bg-light mt-3">
+               
+            </footer>
+        </div>
+    </div>
+
+    <%- include('../partials/scripts') %> 
+    
+
+<script>
+    const button = document.querySelector('.change')
+    const buttons = document.querySelectorAll('#second')
+    const cancel = buttons[1]
+    const status = document.querySelector('#status')
+    const update = buttons[0]
+    button.addEventListener('click',()=>{
+        for(let i=0;i<buttons.length; i++){
+            buttons[i].removeAttribute('id')
+            button.id = 'second'
+            
+        }
+        status.disabled = false
+    })
+    cancel.addEventListener('click',()=>{
+        for(let i=0; i<buttons.length; i++){
+            buttons[i].id = 'second'
+            button.removeAttribute('id')
+        }
+        status.disabled = true
+    })
+    update.addEventListener('click',()=>{
+        document.forms["status-form"].submit()
+    })
+</script>
+</body>
+</html>
