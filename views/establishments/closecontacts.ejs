@@ -166,8 +166,8 @@
                                     <% } %>
                                 </tbody>
                             </table>
-                            <a href="#" class="btn btn-dark">Send Notifications</a>
-                            <a href="#" class="btn btn-primary">Change Status</a>
+                            <a href="/establishments-send-notification-close-contacts/<%=moment(temp[0]).format('LL')%>/<%=id %> " class="btn btn-dark">Send Notifications</a>
+                            <a href="/establishments-change-status-close-contacts/<%=moment(temp[0]).format('LL')%>/<%=id %> " class="btn btn-primary">Change Status</a>
                             <button class="btn btn-warning" onclick="ExportToExcel('xlsx')">Convert to excel</button>
                             
                         </div>

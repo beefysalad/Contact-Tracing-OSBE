@@ -153,10 +153,10 @@
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                     <% if (user.notification.length!==0) { %>
                       <% let badge=0%> 
-                        <% for( let index = 0; index < user.notification.length; index++ ) { %>
+                      <% for( let index = user.notification.length-1; index >=0; index-- ) { %>
                           <% if (!user.notification[index].isSeen) { %>
                             <% badge++ %> 
-                            <li class="notify"><a href="#" class="dropdown-item">Notification from: <%= user.notification[index].header %> </a></li>
+                            <li class="notify"><a href="/client/single-notification/<%=user.notification[index]._id%>" class="dropdown-item">Notification from: <%= user.notification[index].header %></a>
                         <% } %>
                        
                       <% } %>

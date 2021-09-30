@@ -215,7 +215,40 @@ app.get('/establishments-user-profile/:id/:datez',isLoggedin,async (req,res)=>{
     const {id,datez} = req.params
     const user = req.user
     const userData = await User.findOne({_id:id})
-    res.render('establishments/euserprofile',{user,userData,datez,moment:moment})
+    res.render('establishments/euserprofile',{user,userData,datez,moment:moment,id})
+})
+app.get('/establishments-change-status-close-contacts/:date/:id',isLoggedin, async(req,res)=>{
+    const user = req.user
+    const {date,id} = req.params
+    const arr = []
+    const data = await Log.findOne({_id:user._id})
+    for(let i=0; i<data.logs.length; i++){
+        if((data.logs[i].date === moment(date).format('MM/DD/YYYY')) && data.logs[i].id !==id)
+        {
+            const userz = await User.updateOne({_id:data.logs[i].id},{status:'Close Contact'})
+            arr.push(data.logs[i])
+        }
+    }
+    res.redirect(`/establishments-get-close-contact/${id}/${date}`)
+})
+app.get('/establishments-send-notification-close-contacts/:date/:id',isLoggedin,async (req,res)=>{
+    const user = req.user
+    const {date,id} = req.params
+    const arr = []
+    const data = await Log.findOne({_id:user._id})
+    for(let i=0; i<data.logs.length; i++){
+        if((data.logs[i].date === moment(date).format('MM/DD/YYYY')) && data.logs[i].id !==id)
+        {
+            const userz = await User.updateOne({_id:data.logs[i].id},{$push:{notification:[{header:`${req.user.businessname}`,
+            message:`Your COVID-19 Status has been changed to Close Contact when you entered ${req.user.businessname} on ${date}. If you feel this is a mistake, please feel free to contact or visit us.`,
+            time:moment(new Date()).format('hh:mm:ss A'),isSeen:false,date:moment(new Date()).format('MM/DD/YYYY')}]}})
+            arr.push(data.logs[i])
+        }
+    }
+    res.redirect(`/establishments-get-close-contact/${id}/${date}`)
+    
+    // console.log(moment(date).format('MM/DD/YYYY'))
+    
 })
 app.get('/establishments-get-close-contact/:id/:datez',isLoggedin,async(req, res)=>{
     const {id,datez} = req.params
@@ -223,16 +256,25 @@ app.get('/establishments-get-close-contact/:id/:datez',isLoggedin,async(req, res
     const data = await Log.findOne({_id:user._id})
     const temp = []
     const arr = []
+    const container = []
     for(let i=0; i<data.logs.length; i++){
+        
         if(moment(data.logs[i].date).format('LL') === datez && data.logs[i].id !== id){
+            
             temp.push(data.logs[i])
+            // container.push(data.logs[i])
+            // console.log(`temp ${temp}`)
+            // console.log(`container ${container}`)
+            
         }
+        
+        
     }
     for(let i=0; i<temp.length; i++){
         const d = await User.findOne({_id:temp[i].id})
         arr.push(d)
     }
-    res.render('establishments/closecontacts',{user,temp,arr,moment:moment})
+    res.render('establishments/closecontacts',{user,temp,arr,moment:moment,id})
 })
 app.post('/establishments-update-user-status/:id/:date',isLoggedin,async(req,res)=>{
     const {id,date,status} = req.params
@@ -247,7 +289,11 @@ app.get('/establishments-dashboard',isLoggedin,async (req,res)=>{
     const user = req.user
     const data = await Log.findOne({_id:user._id})
     let arr = []
+  
+    
     data.logs.reverse()
+    
+    
     // , datalogs = data.logs.reverse()
     for(let i=0; i<data.logs.length; i++){
         const d = await User.findOne({_id:data.logs[i].id})
@@ -365,6 +411,15 @@ app.get('/client/notifications/:notinum',isLoggedinU,async (req,res)=>{
     }
     res.render('users/noti',{user})
 })
+app.get('/client/single-notification/:id',isLoggedinU,async(req,res)=>{
+    const {id} = req.params
+    const user = req.user
+    const data = await User.updateOne(
+        {_id:user._id,'notification._id':id},
+        {$set:{'notification.$.isSeen':true}}
+    )
+    res.render('users/singlenoti',{user,id})
+})
 app.get('/client-profile',isLoggedinU,(req,res)=>{
     const user = req.user
     res.render('users/uviewprofile',{user})
@@ -372,6 +427,14 @@ app.get('/client-profile',isLoggedinU,(req,res)=>{
 app.get('/client-profile/edit',isLoggedinU,(req,res)=>{
     const user = req.user
     res.render('users/ueditprofile',{user})
+})
+app.get('/client-delete-notification/:id/:notinum',isLoggedinU,async (req,res)=>{
+    const {id,notinum} = req.params
+    // console.log(id)
+    const user = req.user
+    const data = await User.updateOne({_id:req.user._id},{"$pull":{"notification":{"_id":id}}},{safe:true, multi:true})
+    res.redirect(`/client/notifications/${notinum}`)
+   
 })
 app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res)=>{
     const user = req.user
@@ -531,7 +594,16 @@ app.post('/client-register',(req,res)=>{
                         username:username,
                         password: hash,
                         image: genPic,
-                        status: "Not Infected",
+                        status: "Negative",
+                        notification:[
+                            {
+                                header:'John Patrick, System Developer',
+                                message:'Thank you for using CCT! This is still under development and the one youre using now is still a prototype.',
+                                isSeen:false,
+                                date: moment(new Date()).format('MM/DD/YYYY'),
+                                time: moment(new Date()).format('hh:mm:ss A')
+                            }
+                        ],
                         dateOfRegistration: `${moment(new Date()).format('MM/DD/YYYY')} ${moment(new Date()).format('hh:mm:ss A')}`
                     })
                     let id
