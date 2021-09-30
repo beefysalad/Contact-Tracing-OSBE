@@ -1,29 +1,23 @@
 <%- include('../partials/header') %> 
-<title>My QR Code</title>
+<title>Notifications</title>
 <style>
-    .image-container{
-        height: 300px;
-        width: 300px;
-        background-color: red;
-        border: 2px solid black;
-    }
     .imagez{
         width: 200px;
         height: 200px;
         border-radius: 50%;
         margin: 0 auto;
+        cursor: pointer;
     }
-    .notify{
-            border-bottom: 1px solid gainsboro;
-        }
-        .account-settings{
-            border-bottom: 1px solid gainsboro;
-        }
     .left-content{
         display: flex;
         flex-direction: column;
         justify-content: center;
-        
+    }
+    .notify{
+            border-bottom: 1px solid gainsboro;
+    }
+    .account-settings{
+      border-bottom: 1px solid gainsboro;
     }
     .m-content{
         margin-top: 10vh;
@@ -32,7 +26,8 @@
         .m-content{
             margin-top: 0;
         }
-    }
+      
+      }
 </style>
 <link rel="stylesheet" href="/css/usersidebar.css">
  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
@@ -82,7 +77,7 @@
               <a href="/client-profile" class="text-reset">View Profile</a>
             </li>
             <li class="list-group-item py-2">
-                <a href="/client-profile/edit" class="text-reset">Edit Profile</a>
+                <a href="#" class="text-reset">Edit Profile</a>
             </li>
             <li class="list-group-item py-2">
                 <a href="/client-new-qr-code" class="text-reset">My QR Code</a>
@@ -158,7 +153,8 @@
                   <% for( let index = 0; index < user.notification.length; index++ ) { %>
                     <% if (!user.notification[index].isSeen) { %>
                       <% badge++ %> 
-                      <li class="notify"><a href="#" class="dropdown-item">Notification from: <%= user.notification[index].header %> </a></li>
+                      <li class="notify"><a href="#" class="dropdown-item"><%= user.notification[index].header %></a>
+                      </li>
                   <% } %>
                  
                 <% } %>
@@ -177,13 +173,6 @@
             </li> -->
           </ul>
           </li>
-          <!-- Icon -->
-          <!-- <li class="nav-item me-3 me-lg-0">
-            <a class="nav-link" href="#">
-              <i class="fab fa-github fa-2x"></i>
-            </a>
-          </li> -->
-          <!-- Avatar -->
           <li class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle hidden-arrow d-flex align-items-center"
@@ -213,96 +202,70 @@
           </li>
         </ul>
       </div>
-      <!-- Container wrapper -->
+   
     </nav>
-    <!-- Navbar -->
+
   </header>
   <main style="margin-top: 58px;">
     <ol class="breadcrumb pt-4 px-3">
         <li class="breadcrumb-item"><a href="/client-dashboard">Dashboard</a></li>
         <li class="breadcrumb-item"><a href="#">Profile Settings</a></li>
-        <li class="breadcrumb-item active" aria-current="page">My Qr Code</li>
-        
-        
+        <li class="breadcrumb-item"><a href="/client-profile">User Profile</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
     </ol>
    
     <hr style="margin-top: 5px;">
    
     
     <div class="container pt-4 m-content">
-        
-        <div class="card">
-            <div class="card-header bg-dark text-white">
-                My QR Code
-            </div>
-            <div class="card-body" style="border: 1px solid black;">
-                <div class="container cont bg-dark">
-                    <h1 class="text-center text-light">QR code generator</h1>
-                    <p class="text-light text-center form-text">Present this QR code upon entering establishments using our application and you will automatically be logged in the database</p>
-                    <p class="form-text text-center">Note: ios users cannot download using the button, taking a screenshot is the alternative method</p>
-                    <div class="row">
-                        <div class="col">
-                            <!-- <label class="form-label text-light" for="qrText">Users Unique ID to be stored in QR (picturi ang qr code using your phone nya mao to imo gamiton inig scan)</label> -->
-                            
-                            <input readonly value="<%=user._id%>" required placeholder="Input Text" class="dod form-control" type="text" name="qrText" id="qrText" style="display: none;">
-                        </div>
-                        <div class="">
-                            <canvas style="display: block; cursor: pointer;" class="mx-auto" height="200" width="200" id="qrCode" onclick="imageClick()"></canvas>
-                        </div>
-                        <p class="form-text text-center">Click the QR Code to download it</p>
-                    </div>
-                    <div class="child mt-5 ptr" style="display: none;">
-                        <button class="btn-primary btn">Download QR Code</button>
-                    </div>                   
-                </div>
-            </div>
+      <div class="card mt-2">
+        <div class="card-header bg-dark text-light">
+          <i class="fas fa-envelope"></i> User Notifications
         </div>
+        <div class="card-body">
+          <ul class="list-group">
+            <% if (user.notification.length ===0) { %>
+             <li class="list-group-item text-danger text-center">You have no notifications!</li>
+            <% } %>
+           <% for( let index = user.notification.length-1; index >= 0; index-- ) { %>
+              <li class="list-group-item">
+                <div class="container">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <p class="lead">From: <a href="#"><%=user.notification[index].header%></a></p>
+                    </div>
+                    <div class="col-md-4">
+                      <p class="lead">Date: <%= user.notification[index].date %> </p>
+                    </div>
+                    <div class="col-md-4">
+                      <p class="lead">Time: <%= user.notification[index].time %> </p>
+                    </div>
+                    <div class="col-md-12">
+                      <p class="lead" style="text-align: justify;
+                      text-justify: inter-word;">Message: <%= user.notification[index].message %> </p>
+                    </div>
+                    
+                    
+                  </div>
+                  <a href="#" class="fas fa-trash-alt text-danger"></a>
+                  <!-- <i class="fas fa-trash-alt btn btn-danger fa-2x"></i> -->
+                </div>
+                
+              </li>
+           <% } %>
+          </ul>
+          <hr>
+          <button class="btn btn-danger">Clear Notifications</button>
+        </div>
+      </div>
     </div>
   
   </main>
 
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.2/axios.min.js"></script>
-<script>
-  let qr
-    
-    (function (){
-        qr = new QRious({
-            element: document.querySelector('#qrCode'),
-            value: document.querySelector('.dod').value,
-            padding: 10,
-            
-            size:200
-        })
-    })()
 
-    const button = document.querySelector('.ptr')
-    button.addEventListener('click',()=>{
-    let canvas = document.querySelector('#qrCode')
-        img = canvas.toDataURL("image/jpeg")
-        axios({
-            url: img,
-            method: 'GET',
-            responseType: 'blob',
-            padding: 225,
-        })
-        .then((response) => {
-         const url = window.URL
-         .createObjectURL(new Blob([response.data]));
-                const link = document.createElement('a');
-                link.href = url;
-                link.setAttribute('download', 'QRCode.png');
-                document.body.appendChild(link);
-                link.click();
-        })
 
-})
-function imageClick(){
-    button.click()
-}
-</script>
 
 </body>
 </html>

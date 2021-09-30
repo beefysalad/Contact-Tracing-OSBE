@@ -18,6 +18,7 @@ const moment = require('moment')
 const dotenv = require('dotenv')
 const cloudinary = require('cloudinary').v2
 const {CloudinaryStorage} = require('multer-storage-cloudinary')
+const { truncate } = require('fs/promises')
 dotenv.config()
 console.clear()
 //MULTER FOR STORAGING IMAGE
@@ -234,8 +235,11 @@ app.get('/establishments-get-close-contact/:id/:datez',isLoggedin,async(req, res
     res.render('establishments/closecontacts',{user,temp,arr,moment:moment})
 })
 app.post('/establishments-update-user-status/:id/:date',isLoggedin,async(req,res)=>{
-    const {id,date} = req.params
-    const update = await User.updateOne({_id:id},{status:req.body.status})
+    const {id,date,status} = req.params
+    const user= req.user
+    const update = await User.updateOne({_id:id},{status:req.body.status,$push:{notification:[{header:`${req.user.businessname}`,
+    message:`Your COVID-19 Status has been changed to ${req.body.status} when you entered ${req.user.businessname} on ${date}. If you feel this is a mistake, please feel free to contact us or visit us`,
+    time:moment(new Date()).format('hh:mm:ss A'),isSeen:false,date:moment(new Date()).format('MM/DD/YYYY')}]}})
     res.redirect(`/establishments-user-profile/${id}/${date}`)
 })
 app.get('/establishments-dashboard',isLoggedin,async (req,res)=>{
@@ -267,7 +271,6 @@ app.post('/elogin',passport.authenticate('elogin',{
 }))
 app.post('/give-qr/:cam_num',(req,res)=>{
     const {cam_num} = req.params
-    
     User.findById(req.body.qrText,(err,userz)=>{
         const user = req.user
         if(userz){
@@ -350,7 +353,18 @@ app.post('/change-picture/:id',upload.single('image'),isLoggedinU,(req,res)=>{
             res.redirect('/client-dashboard')
         })
 })
-
+app.get('/client/notifications/:notinum',isLoggedinU,async (req,res)=>{
+    const {notinum} = req.params
+    const user = req.user
+    
+    for(let i=0; i<notinum; i++){
+        const data = await User.updateOne(
+            {_id:user._id,'notification.isSeen':false},
+            {$set:{'notification.$.isSeen':true}}
+        )
+    }
+    res.render('users/noti',{user})
+})
 app.get('/client-profile',isLoggedinU,(req,res)=>{
     const user = req.user
     res.render('users/uviewprofile',{user})
@@ -532,15 +546,24 @@ app.post('/client-register',(req,res)=>{
         }
     })
 })
-app.use((req,res)=>{
-    res.status(404).send('TO DO PANI ANG ERROR PAGE PARA SA UNKNOWN ROUTES!')
+app.use((err,req,res,next)=>{
+    // res.status(404).send('TO DO PANI ANG ERROR PAGE PARA SA UNKNOWN ROUTES!')
+    console.log(err)
+    res.status(404).render('errorpage/404')
+})
+
+app.use((err,req,res,next)=>{
+    // console.log('**********************')
+    // console.log('********ERROR********')
+    // console.log('**********************')
+    // console.log(err)
+    // res.status(500).send('OH BOY WE GOT AN ERROR')
+    console.log(err)
+    res.status(500).render('errorpage/500')
 })
 app.use((err,req,res,next)=>{
-    console.log('**********************')
-    console.log('********ERROR********')
-    console.log('**********************')
     console.log(err)
-    res.status(500).send('OH BOY WE GOT AN ERROR')
+    res.status(401).render('errorpage/401')
 })
 
 app.listen(port,()=>{

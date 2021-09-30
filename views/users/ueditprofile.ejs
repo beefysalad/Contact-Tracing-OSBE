@@ -140,27 +140,37 @@
                         <% badge++ %> 
                     <% } %>
                 <% } %>
+                <% if (badge===0) { %>
+                  <span class="badge rounded-pill badge-notification bg-danger"></span>
+                <% } else { %>
                 <span class="badge rounded-pill badge-notification bg-danger"><%= badge %> </span>
+                <% } %>
               <% } %>
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                <% if (user.notification.length!==0) { %>
-                    <% for( let index = 0; index < user.notification.length; index++ ) { %>
-                      <% if (!user.notification[index].isSeen) { %>
-                        <li class="notify"><a class="dropdown-item"><%= user.notification[index].message %> </a></li>
-                    <% } %>
-                     <% } %>
-                <% } else { %>
-                        <li><a class="dropdown-item">You dont have any notifications</a></li>
+              <% if (user.notification.length!==0) { %>
+                <% let badge=0%> 
+                  <% for( let index = 0; index < user.notification.length; index++ ) { %>
+                    <% if (!user.notification[index].isSeen) { %>
+                      <% badge++ %> 
+                      <li class="notify"><a href="#" class="dropdown-item">Notification from: <%= user.notification[index].header %> </a></li>
+                  <% } %>
+                 
                 <% } %>
-               
-                <li><a href="#" class="dropdown-item text-center notify text-primary">View All</a></li>
-              <!-- <li><a class="dropdown-item" href="#">To do pani diri</a></li>
-              <li><a class="dropdown-item" href="#">To do pani diri</a></li>
-              <li>
-                <a class="dropdown-item" href="#">Topi ngano bakat imoha</a>
-              </li> -->
-            </ul>
+                <% if (badge===0) { %>
+                  <li><a class="dropdown-item">You dont have any notifications</a></li>
+                <% } %>
+              <% } else { %>
+                      <li><a class="dropdown-item">You dont have any notifications</a></li>
+              <% } %>
+             
+              <li><a href="/client/notifications/<%=user.notification.length%>" class="dropdown-item text-center notify text-primary">View All</a></li>
+            <!-- <li><a class="dropdown-item" href="#">To do pani diri</a></li>
+            <li><a class="dropdown-item" href="#">To do pani diri</a></li>
+            <li>
+              <a class="dropdown-item" href="#">Topi ngano bakat imoha</a>
+            </li> -->
+          </ul>
           </li>
           <li class="nav-item dropdown">
             <a

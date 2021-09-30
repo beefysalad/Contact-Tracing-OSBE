@@ -2,14 +2,19 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 const notifications = new Schema({
-    _id:false,
     message:{
         type: String
+    },
+    header:{
+        type:String
     },
     isSeen:{
         type:Boolean
     },
     date:{
+        type:String
+    },
+    time:{
         type:String
     }
 })
