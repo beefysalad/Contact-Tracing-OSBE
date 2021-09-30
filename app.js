@@ -562,7 +562,7 @@ app.get('/client-qr/:id',(req,res)=>{
     res.render('users/uqr', {id})
 })
 app.post('/client-register',(req,res)=>{
-    const{firstName,lastName,username,birthDate,address,emailAddress,contactNumber,gender,password} = req.body
+    const{firstName,lastName,username,birthDate,address,emailAddress,contactNumber,gender,password,latitude,longitude} = req.body
     let genPic
     if(gender==='Male'){
         // console.log('nisud sa male');
@@ -571,6 +571,7 @@ app.post('/client-register',(req,res)=>{
         // console.log('nisud sa female');
         genPic = 'https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultfemale_j2cqjd.jpg'
     }
+    // if(latitude.value!=='' && longitude.value!=='')
     
     User.findOne({username:username},(err,user)=>{
         if(user){
@@ -604,6 +605,10 @@ app.post('/client-register',(req,res)=>{
                                 time: moment(new Date()).format('hh:mm:ss A')
                             }
                         ],
+                        coordinates:[{
+                            latitude:latitude,
+                            longitude:longitude
+                        }],
                         dateOfRegistration: `${moment(new Date()).format('MM/DD/YYYY')} ${moment(new Date()).format('hh:mm:ss A')}`
                     })
                     let id

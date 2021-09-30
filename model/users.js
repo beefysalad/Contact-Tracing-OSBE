@@ -18,6 +18,11 @@ const notifications = new Schema({
         type:String
     }
 })
+const coordinates = new Schema({
+    _id:false,
+    latitude: String,
+    longitude: String
+})
 const userSchema = new Schema({
     firstName: {
         type: String,
@@ -67,7 +72,8 @@ const userSchema = new Schema({
     status:{
         type:String,
         required: true
-    }
+    },
+    coordinates: [coordinates]
 })
 
 module.exports = mongoose.model('user',userSchema)

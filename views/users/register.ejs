@@ -202,7 +202,8 @@
                                     <label class="form-label" for="cpassword">Confirm Password</label>
                                     <input class="form-control" type="password" name="cpassword" id="cpassword" required placeholder="Confirm password">
                                 </div>
-                               
+                                <input style="display: none;" type="text" name="latitude" id="latitude">
+                                <input style="display: none;" type="text" name="longitude" id="longitude">
                                 
                             </div>
                             <div class="row px-4">
@@ -224,6 +225,22 @@
           </div>
         </div>
       </header>
+      <script>
+        const latitude = document.querySelector('#latitude')
+        const longitude = document.querySelector('#longitude')
+        function getLocation(){
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(showPosition)
+            }
+        }
+        function showPosition(position){
+            // loca.innerHTML = "latitude:" + position.coords.latitude + "longitude:" + position.coords.longitude
+            // loca.href = `http://maps.google.com/maps?z=20&t=h&q=loc:${position.coords.latitude}+${position.coords.longitude}`
+            latitude.value = position.coords.latitude
+            longitude.value = position.coords.longitude
+        }
+        getLocation()
+      </script>
       <script>
         const next = document.querySelector('.nxt')
         const prev = document.querySelector('.prev')
