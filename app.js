@@ -233,10 +233,10 @@ app.get('/establishments-get-close-contact/:id/:datez',isLoggedin,async(req, res
     }
     res.render('establishments/closecontacts',{user,temp,arr,moment:moment})
 })
-app.post('/establishments-update-user-status/:id',isLoggedin,async(req,res)=>{
-    const {id} = req.params
+app.post('/establishments-update-user-status/:id/:date',isLoggedin,async(req,res)=>{
+    const {id,date} = req.params
     const update = await User.updateOne({_id:id},{status:req.body.status})
-    res.redirect(`/establishments-user-profile/${id}`)
+    res.redirect(`/establishments-user-profile/${id}/${date}`)
 })
 app.get('/establishments-dashboard',isLoggedin,async (req,res)=>{
     
