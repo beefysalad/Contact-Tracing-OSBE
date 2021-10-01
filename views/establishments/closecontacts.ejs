@@ -1,5 +1,5 @@
 <%- include('../partials/header') %> 
-<title>All Logs</title>
+<title>Close Contacts</title>
 <style>
     .control{
         width: 40px;
@@ -19,6 +19,12 @@
         width: 20px;
         height: 20px;
         border-radius: 50%;
+    }
+    .hidden-change{
+        visibility: hidden;
+    }
+    .invalid-code{
+        display: none;
     }
     .test2{
         width: 30px;
@@ -113,6 +119,28 @@
         </div>
         <div id="layoutSidenav_content">
             <main>
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="staticBackdropLabel">Contact Tracer Code</h5>
+                          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                        </div>
+                        <div class="modal-body">
+                            
+                          <form action="#">
+                              <p class="text-danger invalid-code">Invalid Code!</p>
+                              <label for="code" class="form-label">Enter a 4-digit Code</label>
+                              <input type="password" name="code" id="code" class="form-control" placeholder="Code" required maxlength="4">
+                              <hr>
+                              <button type="button" class="btn btn-primary" id="codebutton">Submit</button>
+                              <button type="button" class="btn btn-danger" id="second" data-bs-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-success" id="hidden-but" data-bs-dismiss="modal" style="display: none;">Hidden</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 <div class="container-fluid px-4">
                     <div class="card mt-5">
                         <div class="card-header">
@@ -166,9 +194,12 @@
                                     <% } %>
                                 </tbody>
                             </table>
-                            <a href="/establishments-send-notification-close-contacts/<%=moment(temp[0]).format('LL')%>/<%=id %> " class="btn btn-dark">Send Notifications</a>
-                            <a href="/establishments-change-status-close-contacts/<%=moment(temp[0]).format('LL')%>/<%=id %> " class="btn btn-primary">Change Status</a>
+                            
+                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="change">Change Status</button>
                             <button class="btn btn-warning" onclick="ExportToExcel('xlsx')">Convert to excel</button>
+                            <a href="/establishments-change-status-close-contacts/<%=moment(temp[0]).format('LL')%>/<%=id %> " class="btn btn-primary hidden-change">Change Status</a>
+                            <a href="/establishments-send-notification-close-contacts/<%=moment(temp[0]).format('LL')%>/<%=id %> " class="btn btn-dark hidden-change">Send Notifications</a>
+                            <button class="btn btn-success hidden-change">Cancel</button>
                             
                         </div>
                     </div>
@@ -183,6 +214,42 @@
     </div>
 
     <%- include('../partials/scripts') %> 
-
+    <script>
+        const codes = ['ABCD','EFGH','JKLM']
+        const codebutton = document.querySelector('#codebutton')
+        const error = document.querySelector('.invalid-code')
+        const hidden = document.querySelector('#hidden-but')
+        const change = document.querySelector('#change')
+        const unhide = document.querySelectorAll('.hidden-change')
+        codebutton.addEventListener('click',(e)=>{
+        // e.preventDefault()
+        // alert("HELLO")
+        
+        for(let i=0; i<codes.length; i++){
+            if(code.value===codes[i]){
+                // alert("YEY")
+                for(let x=0; x<3; x++){
+                    unhide[x].classList.remove('hidden-change')
+                    console.log('nisud')
+                }
+                hidden.click()
+                break
+            }
+            else{
+                error.classList.remove('invalid-code')
+                setInterval(()=>{
+                    error.classList.add('invalid-code')
+                },3000)
+                break
+            }
+        }
+        })
+        unhide[2].addEventListener('click',()=>{
+            for(let i=0; i<3; i++){
+                unhide[i].classList.add('hidden-change')
+            }
+        })
+    </script>
 </body>
+
 </html>

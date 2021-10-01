@@ -24,6 +24,9 @@
         justify-content: center;
         
     }
+    .invalid-code{
+        display: none;
+    }
     #second{
         display: none;
     }
@@ -99,6 +102,31 @@
         </div>
         <div id="layoutSidenav_content">
             <main>
+                <!-- Button trigger modal -->
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="staticBackdropLabel">Contact Tracer Code</h5>
+                          <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                        </div>
+                        <div class="modal-body">
+                            
+                          <form action="#">
+                              <p class="text-danger invalid-code">Invalid Code!</p>
+                              <label for="code" class="form-label">Enter a 4-digit Code</label>
+                              <input type="password" name="code" id="code" class="form-control" placeholder="Code" required maxlength="4">
+                              <hr>
+                              <button type="button" class="btn btn-primary" id="codebutton">Submit</button>
+                              <button type="button" class="btn btn-danger" id="second" data-bs-dismiss="modal">Close</button>
+                              <button type="button" class="btn btn-success" id="hidden-but" data-bs-dismiss="modal" style="display: none;">Hidden</button>
+                          </form>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <!-- HAHAHA -->
                 <div class="container-fluid px-4">
                     <div class="card mt-5">
                         <div class="card-header">
@@ -142,7 +170,7 @@
                                                 <div class="col-md-6">
                                                     <label for="status" class="form-label mt-3">Status</label>
                                                     <select required id="status" name="status" class="form-select" aria-label="Default select example" disabled>
-                                                        <option value="" selected disabled hidden><%=userData.status%> </option>
+                                                        <option value="<%=userData.status%> " selected disabled hidden><%=userData.status%> </option>
                                                         <option value="Negative">Negative</option>
                                                         <option value="Positive">Positive</option>
                                                         <option value="Close Contact">Close Contact</option>
@@ -159,7 +187,10 @@
                             <div class="button-container">
                                 <a href="/establishments-get-close-contact/<%=userData._id%>/<%=datez%>" class="btn btn-primary">Get Possible Close Contacts</a>
                                 <!-- <button class="btn btn-primary first">Get Possible Close Contacts</button> -->
-                                <button class="btn btn-danger first change">Change Status</button>
+                                <button type="button" class="btn btn-danger first change" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    Change Status
+                                </button>
+                                <!-- <button class="btn btn-danger first change">Change Status</button> -->
                                 <button class="btn btn-success" id="second">Update</button>
                                 <button class="btn btn-dark" id="second">Cancel</button>
                             </div>
@@ -178,11 +209,34 @@
     
 
 <script>
+    const code = document.querySelector('#code')
+    const codebutton = document.querySelector('#codebutton')
+    const codes = ['ABCD','EFGH','JKLM']
     const button = document.querySelector('.change')
     const buttons = document.querySelectorAll('#second')
-    const cancel = buttons[1]
+    const cancel2 = buttons[0]
+    const cancel = buttons[2]
     const status = document.querySelector('#status')
-    const update = buttons[0]
+    const update = buttons[1]
+    const hidden = document.querySelector('#hidden-but')
+    const error = document.querySelector('.invalid-code')
+    codebutton.addEventListener('click',(e)=>{
+        // e.preventDefault()
+        // alert("HELLO")
+        for(let i=0; i<codes.length; i++){
+            if(code.value===codes[i]){
+                // alert("YEY")
+                hidden.click()
+                break
+            }else{
+                error.classList.remove('invalid-code')
+                setInterval(()=>{
+                    error.classList.add('invalid-code')
+                },3000)
+                break
+            }
+        }
+    })
     button.addEventListener('click',()=>{
         for(let i=0;i<buttons.length; i++){
             buttons[i].removeAttribute('id')
@@ -192,6 +246,13 @@
         status.disabled = false
     })
     cancel.addEventListener('click',()=>{
+        for(let i=0; i<buttons.length; i++){
+            buttons[i].id = 'second'
+            button.removeAttribute('id')
+        }
+        status.disabled = true
+    })
+    cancel2.addEventListener('click',()=>{
         for(let i=0; i<buttons.length; i++){
             buttons[i].id = 'second'
             button.removeAttribute('id')
