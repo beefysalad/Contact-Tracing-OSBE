@@ -73,7 +73,7 @@ const userSchema = new Schema({
         type:String,
         required: true
     },
-    coordinates: [coordinates]
+    coordinates: coordinates
 })
 
 module.exports = mongoose.model('user',userSchema)

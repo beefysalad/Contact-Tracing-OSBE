@@ -561,6 +561,19 @@ app.get('/client-qr/:id',(req,res)=>{
     const {id} = req.params
     res.render('users/uqr', {id})
 })
+app.get('/client-map-location',isLoggedinU,async (req,res)=>{
+    const user = req.user
+    res.render('users/mymap',{user})
+})
+app.post('/client-map-save-location',isLoggedinU,async (req,res)=>{
+    const {latitude,longitude} = req.body
+    const user = req.user
+    User.updateOne({_id:user._id}, {$set:{'coordinates.latitude':latitude,'coordinates.longitude':longitude}})
+    .then(data=>{
+        console.log(data)
+    })
+    res.redirect('/client-map-location')
+})
 app.post('/client-register',(req,res)=>{
     const{firstName,lastName,username,birthDate,address,emailAddress,contactNumber,gender,password,latitude,longitude} = req.body
     let genPic
@@ -605,10 +618,10 @@ app.post('/client-register',(req,res)=>{
                                 time: moment(new Date()).format('hh:mm:ss A')
                             }
                         ],
-                        coordinates:[{
+                        coordinates:{
                             latitude:latitude,
                             longitude:longitude
-                        }],
+                        },
                         dateOfRegistration: `${moment(new Date()).format('MM/DD/YYYY')} ${moment(new Date()).format('hh:mm:ss A')}`
                     })
                     let id

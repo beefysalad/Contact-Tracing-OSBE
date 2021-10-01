@@ -207,6 +207,7 @@
               aria-labelledby="navbarDropdownMenuLink"
             >
               <li class="account-settings"><a class="dropdown-item" href="#"><%=user.firstName%> <%=user.lastName%> </a></li>
+              <li class="account-settings"><a class="dropdown-item" href="/client-map-location">My Location</a></li>
               <li class="account-settings"><a class="dropdown-item" href="/client-profile">My profile</a></li>
               <li class="account-settings"><a class="dropdown-item" href="/logoutU">Logout</a></li>
             </ul>
@@ -220,9 +221,13 @@
   <main style="margin-top: 58px;">
     <ol class="breadcrumb pt-4 px-3">
         <li class="breadcrumb-item"><a href="/client-dashboard">Dashboard</a></li>
-        <li class="breadcrumb-item"><a href="#">Profile Settings</a></li>
-        <li class="breadcrumb-item"><a href="/client-profile">User Profile</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+        <li class="breadcrumb-item active" aria-current="page"> Notification from 
+          <% for( let index = 0; index < user.notification.length; index++ ) { %>
+                <% if (user.notification[index]._id == id) { %>
+                  <%=user.notification[index].header%>
+                <% } %>
+          <% } %>
+          </li>
     </ol>
    
     <hr style="margin-top: 5px;">

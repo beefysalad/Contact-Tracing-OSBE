@@ -20,7 +20,7 @@
       border-bottom: 1px solid gainsboro;
     }
     .m-content{
-        margin-top: 3vh;
+        margin-top: 2vh;
     }
     #take-control{
       justify-content: center;
@@ -28,6 +28,11 @@
     #noti-message{
       margin: 0;
       padding: 0;
+    }
+    #mapid {
+        height: 500px; 
+        width: inherit;
+           
     }
     .pagination li {
       display:inline-block;
@@ -47,6 +52,12 @@
  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
  <!-- MDB -->
  <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet"/>
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+ integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+ crossorigin=""/>
+ <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+ integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+ crossorigin=""></script>
 </head>
 <body>
 <header>
@@ -207,7 +218,6 @@
               aria-labelledby="navbarDropdownMenuLink"
             >
               <li class="account-settings"><a class="dropdown-item" href="#"><%=user.firstName%> <%=user.lastName%> </a></li>
-              <li class="account-settings"><a class="dropdown-item" href="/client-map-location">My Location</a></li>
               <li class="account-settings"><a class="dropdown-item" href="/client-profile">My profile</a></li>
               <li class="account-settings"><a class="dropdown-item" href="/logoutU">Logout</a></li>
             </ul>
@@ -223,7 +233,7 @@
         <li class="breadcrumb-item"><a href="/client-dashboard">Dashboard</a></li>
         <!-- <li class="breadcrumb-item"><a href="#">Profile Settings</a></li>
         <li class="breadcrumb-item"><a href="/client-profile">User Profile</a></li> -->
-        <li class="breadcrumb-item active" aria-current="page">User Notifications</li>
+        <li class="breadcrumb-item active" aria-current="page">My Map</li>
     </ol>
    
     <hr style="margin-top: 5px;">
@@ -232,80 +242,19 @@
     <div class="container pt-4 m-content">
       <div class="card mt-2">
         <div class="card-header bg-dark text-light">
-          <i class="fas fa-envelope"></i> User Notifications
+            <i class="fas fa-map-marker"></i>  My Map Location
         </div>
         <div class="card-body">
-          <div id="test-list">
-            <ul class="list" id="noti-message">
-              <% if (user.notification.length ===0) { %>
-                <li class="list-group-item text-danger text-center">You have no notifications!</li>
-                <% } %>
-              <% for( let index = user.notification.length-1; index >= 0; index--) { %>
-                <li class="notification name list-group-item">
-                  <div class="container">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <p class="lead">From: <a href="#"><%=user.notification[index].header%></a></p>
-                      </div>
-                      <div class="col-md-4">
-                        <p class="lead">Date: <%= user.notification[index].date %> </p>
-                      </div>
-                      <div class="col-md-4">
-                        <p class="lead">Time: <%= user.notification[index].time %> </p>
-                      </div>
-                      <div class="col-md-12">
-                        <p class="lead" style="text-align: justify;
-                        text-justify: inter-word;"><%= user.notification[index].message %> </p>
-                      </div>
-                    </div>
-                    <a href="/client-delete-notification/<%=user.notification[index]._id%>/<%=user.notification.length%>" class="fas fa-trash-alt text-danger"></a>
-                  </div>
-                </li>
-            <% } %>
-            </ul>
-            <p class="form-text mt-5 text-center">Pages</p>
-            <ul class="pagination" id="take-control">
-              
-            </ul>
-          </div>
+            <div id="mapid"></div>
+            <form action="/client-map-save-location" method="POST">
+                <label for="latitude">Latitude</label>
+                <input type="text" name="latitude" id="latitude" readonly class="form-control" value="<%=user.coordinates.latitude%>">
+                <label for="longitude">Longitude</label>
+                <input type="text" name="longitude" id="longitude" readonly class="form-control" value="<%=user.coordinates.longitude%>">
+                <hr>
+                <button class="btn btn-success">Save Location</button>
+            </form>
         </div>
-        <!-- <div class="card-body">
-          <div class="test-list">
-            <ul class="list">
-              <% if (user.notification.length ===0) { %>
-              <li class="list-group-item text-danger text-center">You have no notifications!</li>
-              <% } %>
-            <% for( let index = user.notification.length-1; index >= 0; index--) { %>
-                <li class="notification">
-                  <div class="container">
-                    <div class="row">
-                      <div class="col-md-4">
-                        <p class="lead">From: <a href="#"><%=user.notification[index].header%></a></p>
-                      </div>
-                      <div class="col-md-4">
-                        <p class="lead">Date: <%= user.notification[index].date %> </p>
-                      </div>
-                      <div class="col-md-4">
-                        <p class="lead">Time: <%= user.notification[index].time %> </p>
-                      </div>
-                      <div class="col-md-12">
-                        <p class="lead" style="text-align: justify;
-                        text-justify: inter-word;">Message: <%= user.notification[index].message %> </p>
-                      </div>
-                      
-                      
-                    </div>
-                    <a href="#" class="fas fa-trash-alt text-danger"></a>
-                  </div>
-                  
-                </li>
-            <% } %>
-            </ul>
-          </div>
-          <ul class="pagination"></ul>
-          <hr>
-          <button class="btn btn-danger">Clear Notifications</button>
-        </div> -->
       </div>
     </div>
   
@@ -316,11 +265,51 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script>
-    var monkeyList = new List('test-list', {
-    valueNames: ['notification'],
-    page: 3,
-    pagination: true
-    });
+    let latitude,longitude
+    const lat = document.querySelector('#latitude')
+    const long = document.querySelector('#longitude')
+   
+    function showPosition(position){
+       
+        if(lat.value === '' && long.value === ''){
+            lat.value = ''
+            long.value = ''
+            latitude = position.coords.latitude
+            longitude = position.coords.longitude
+        }else{
+            latitude = lat.value
+            longitude = long.value
+        }
+        const mymap = L.map('mapid').setView([latitude, longitude], 15);
+        let marker = L.marker([latitude, longitude],{draggable: true}).addTo(mymap)
+        marker.setLatLng([latitude,longitude])
+        marker.on('dragend', function (e) {
+        document.getElementById('latitude').value = marker.getLatLng().lat;
+        document.getElementById('longitude').value = marker.getLatLng().lng;
+        });
+        const attribution = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        const tileUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+        const tiles = L.tileLayer(tileUrl,{attribution})
+        tiles.addTo(mymap)
+    }
+    function error(err) {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
+    }
+    const options = {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 0
+    };
+    function getLocation(){
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(showPosition,error,options)
+        }
+    }
+    
+
+    getLocation()
+    
+    
 </script>
 
 

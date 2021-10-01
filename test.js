@@ -1,8 +1,9 @@
-const moment = require('moment')
-console.log(new Date());
-let date = "11/18/1999"
-let d = new Date(date).toISOString()
-console.log(moment(new Date()).fromNow())
-
-
-
+function showPosition(position){
+    console.log(`${position.coords.latitude} ${position.coords.longitude}`)
+}
+function getPosition(){
+    if(navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(showPosition)
+    }
+}
+getPosition()
