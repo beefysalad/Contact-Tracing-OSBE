@@ -163,11 +163,11 @@
                                     <p class="form-text">Enter your details to create an account</p>
                                 </div>
                                <div class="col-md-6 col-sm-6">
-                                   <label class="form-label" for="businessnumber">Business No.</label>
+                                   <label class="form-label mt-2" for="businessnumber">Business No.</label>
                                    <input minlength="6" class="form-control" type="number" name="businessnumber" id="businessnumber" required placeholder="Business No.">
                                </div>
                                <div class="col-md-6 col-6">
-                                   <label for="businessname" class="form-label">Business Name</label>
+                                   <label for="businessname" class="form-label mt-2">Business Name</label>
                                    <input type="text" name="businessname" id="businessname" class="form-control" required placeholder="Business Name">
                                </div>
                                <div class="col-md-6 col-6">
@@ -178,6 +178,7 @@
                                     <label class="form-label mt-2" for="cnumber">Contact Number</label>
                                     <input class="form-control" type="number" name="cnumber" id="cnumber" required placeholder="Contact Number" minlength="11">
                                 </div>
+                              
                                <div class="col-md-12 col-sm-12 col-6">
                                    <% if (messages.error) { %>
                                     <label class="form-label mt-2" for="username" style="color: red;"><%= messages.error %> </label>
@@ -187,6 +188,10 @@
                                    <% } %>
                                     <input class="form-control" type="text" name="username" id="username" required placeholder="Username">
                                </div>
+                               <div class="col-md-12">
+                                <label for="address" class="form-label mt-2">Address</label>
+                                <input type="text" name="address" id="address" class="form-control" required placeholder="Address">
+                              </div> 
                                <div class="col-md-12">
                                     <label class="form-label mt-2" for="email">Email</label>
                                     <input class="form-control" type="email" name="email" id="email" required placeholder="Email Address">
@@ -206,7 +211,8 @@
                             </div>
                             
                         </div>
-                       
+                        <input type="text" name="latitude" id="latitude" class="form-control" style="display: none;">
+                        <input type="text" name="longitude" id="longitude" class="form-control" style="display: none;">
                     </form>
                     
                     <div class="container">
@@ -222,19 +228,34 @@
     </div>
       </header>
       <script>
+        const latitude = document.querySelector('#latitude')
+        const longitude = document.querySelector('#longitude')
+        function getLocation(){
+            if(navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(showPosition)
+            }
+        }
+        function showPosition(position){
+            // loca.innerHTML = "latitude:" + position.coords.latitude + "longitude:" + position.coords.longitude
+            // loca.href = `http://maps.google.com/maps?z=20&t=h&q=loc:${position.coords.latitude}+${position.coords.longitude}`
+            latitude.value = position.coords.latitude
+            longitude.value = position.coords.longitude
+        }
+        getLocation()
+      </script>
+      <script>
         const shp = document.querySelector('#shp')
         const password = document.querySelector('#password')
-        shp.value = 'on'
-        shp.addEventListener('change',()=>{
-            if(shp.value==='on'){
-                password.setAttribute('type','text')
-               
-                shp.value='off'
-            }else if(shp.value==='off'){
-                password.setAttribute('type','password')
-               
-                shp.value='on'
-            }
+        const  cpassword = document.querySelector('#cpassword')
+        cpassword.addEventListener('keyup',(e)=>{
+    
+        if(cpassword.value==password.value){
+            cpassword.setCustomValidity('')
+        }
+        else{
+            cpassword.setCustomValidity('Passwords do not match')
+        }
+            cpassword.reportValidity()
         })
     </script>
 </body>

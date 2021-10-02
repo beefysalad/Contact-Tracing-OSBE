@@ -115,25 +115,36 @@
                             Dashboard
                         </a>
                         <div class="sb-sidenav-menu-heading">Functionalities</div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayout1" aria-expanded="false" aria-controls="collapseLayout1">
                             <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
                             Customer Logs
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
+                        <div class="collapse" id="collapseLayout1" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link text-primary" href="/establishments-dashboard">Todays Logs</a>
-                                <a class="nav-link text-primary" href="/establishments-logs/<%= user._id %> ">All Logs</a>
+                                <a class="nav-link" href="/establishments-dashboard">Todays Logs</a>
+                                <a class="nav-link" href="/establishments-logs/<%= user._id %> ">All Logs</a>
                                 
                             </nav>
                         </div>
-                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayoutz" aria-expanded="false" aria-controls="collapseLayouts">
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayout2" aria-expanded="false" aria-controls="collapseLayout2">
                             <div class="sb-nav-link-icon"><i class="fas fa-camera"></i></div>
                             Scan QR Code
                             <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
-                        <div class="collapse" id="collapseLayoutz" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                        <div class="collapse" id="collapseLayout2" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav cameras_but">
+                                
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayout3" aria-expanded="false" aria-controls="collapseLayout1">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                             Map
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayout3" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="/establishments-map-location">My Map</a>
                                 
                             </nav>
                         </div>
@@ -223,38 +234,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="row mt-5" style="background-color: red;">
-                        <div class="col-md-6" style="background-color: pink;">
-                                1
-                        </div>
-                        <div class="col-md-6" style="background-color: aqua;">
-                            2
-                        </div>
-                    </div> -->
-                    
-                    <!-- <% if (messages.success) { %>
-                    <h1 class="text-center text-primary dis"><%= messages.success %> </h1>
-                    <% } %>
-                    <% if (messages.error) { %>
-                    <h1 class="text-danger text-center dis"><%= messages.error %> </h1>
-                    <% } %>
-                    <div class="container bg-primary cont mt-5 d-flex flex-column">
-                        <p class="text-center lead">Align your QR Code infront of the scanner</p>
-                        <video id="preview"></video>
-                        <label id="qrt" class="form-label text-warning" for="qrText">Users Unique ID</label>
-                        <form action="/give-qr/<%=cam_num%> " method="POST" id="uniqueid">
-                            <input type="text" name="qrText" id="qrText" class="form-control" readonly required>
-                        </form>
-                    </div>
-                    <div class="d-flex mx-auto tik">
-                            
-                    </div>
-                    <div class="container bg-danger testz mt-5">
-                        <p class="text-center lead">TO-DO PANI DIRI PERO ESSENTIALLY MUGAWAS ANG PICTURE(IF NAA) AND DETAILS SA USER IF MA SCAN SILA </p>
-                        <% if (messages.info) { %>
-                            <img src="<%= messages.info %>" alt="" class="yawa"> 
-                        <% } %>
-                    </div> -->
+
                 </div>
                 
             </main>

@@ -1,7 +1,11 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-
+const coordinates = new Schema({
+    _id:false,
+    latitude: String,
+    longitude: String
+})
 const establishmentSchema = new Schema({
     businessnumber : {
         type: String,
@@ -34,7 +38,12 @@ const establishmentSchema = new Schema({
     dateOfRegistration:{
         type:String,
         required: true
-    }
+    },
+    address:{
+        type:String,
+        required:true
+    },
+    coordinates:coordinates
 })
 
 module.exports = mongoose.model('establishment',establishmentSchema)

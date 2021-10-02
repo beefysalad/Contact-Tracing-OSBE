@@ -39,12 +39,18 @@
         flex-direction: column;
     }
     .button-container{
-        display: flex;
+        /* display: flex;
         flex-direction: column;
-        /* justify-content: space-between;
-        align-self: flex-end; */
+        justify-content: space-between; */
+        align-self: flex-end;
        
         
+    }
+    @media (max-width: 433px) {
+        .button-container{
+            /* display: flex; */
+            align-self: start;
+        }
     }
     </style>
 </head>
@@ -98,6 +104,17 @@
                         </a>
                         <div class="collapse" id="collapseLayoutz" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav cameras_but">
+                            </nav>
+                        </div>
+                        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayout3" aria-expanded="false" aria-controls="collapseLayout1">
+                            <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                             Map
+                            <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapseLayout3" aria-labelledby="headingTwo" data-bs-parent="#sidenavAccordion">
+                            <nav class="sb-sidenav-menu-nested nav">
+                                <a class="nav-link" href="/establishments-map-location">My Map</a>
+                                
                             </nav>
                         </div>
                     </div>

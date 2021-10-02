@@ -12,6 +12,7 @@ const mongoose = require('mongoose')
 const User = require('./model/users')
 const Establishment = require('./model/establishments')
 const Log = require('./model/logs')
+const UserLog = require('./model/userlogs')
 const methodOverride = require('method-override')
 const multer = require('multer')
 const moment = require('moment')
@@ -205,6 +206,34 @@ app.get('/establishments-scanqr/:cam_num',isLoggedin,(req,res)=>{
     const user = req.user
     res.render('establishments/escanner',{cam_num,user})
 })
+app.get('/establishments-map-location',isLoggedin,async (req,res)=>{
+    // console.log(process.env.MAP_API_KEY)
+    const map_api_key = process.env.MAP_API_KEY
+    const user = req.user
+    res.render('establishments/map',{user,map_api_key})
+})
+app.post('/establishments-save-map-location',isLoggedin,async(req,res)=>{
+    const {latitude,longitude} = req.body
+    const user = req.user
+    Establishment.updateOne({_id:user._id}, {$set:{'coordinates.latitude':latitude,'coordinates.longitude':longitude}})
+    .then(data=>{
+        // console.log(data)
+    })
+    UserLog.find({'userlog._id':user._id})
+    .then(data=>{
+        for(let i=0; i<data.length; i++){
+            UserLog.updateMany({_id:data[i]._id,'userlog._id':user._id}
+            ,{
+                '$set':{
+                    'userlog.$[elem].location.latitude':latitude,
+                    'userlog.$[elem].location.longitude':longitude
+                }}
+                ,{'arrayFilters':[{'elem._id':user._id}]})
+                .then(data=>{})
+        }
+    })
+    res.redirect('/establishments-map-location')
+})
 app.get('/establishments-login',isLoggedOut,(req,res)=>{
     res.render('establishments/login')
 })
@@ -339,7 +368,10 @@ app.post('/give-qr/:cam_num',(req,res)=>{
                 .then(data=>{
                     
                 })
+            UserLog.updateOne({_id:userz._id},{$push:{userlog:[{_id:user._id,establishment_name:user.businessname,address:user.address,'location.latitude':user.coordinates.latitude,'location.longitude':user.coordinates.longitude,time:moment(new Date()).format('hh:mm:ss A'),date:moment(new Date()).format('MM/DD/YYYY')}]}})
+            .then(data=>{
                 
+            })
             // res.redirect(`/establishments-scanqr/${cam_num}`,{user})
             res.render(`establishments/escanner`,{cam_num,userDets,user,age})
         }else{
@@ -351,7 +383,7 @@ app.post('/give-qr/:cam_num',(req,res)=>{
     })
 })
 app.post('/eregister',(req,res)=>{
-    const{businessnumber,cperson,cnumber,username,email,password,businessname} = req.body
+    const{businessnumber,cperson,cnumber,username,email,password,businessname,latitude,longitude,address} = req.body
     Establishment.findOne({username:username},(err,user)=>{
         if(user){
             req.flash('error','Username already taken!')
@@ -371,6 +403,11 @@ app.post('/eregister',(req,res)=>{
                         username: username,
                         email: email,
                         password: hash,
+                        address:address,
+                        coordinates:{
+                            latitude:latitude,
+                            longitude:longitude
+                        },
                         dateOfRegistration: `${moment(new Date()).format('MM/DD/YYYY')} ${moment(new Date()).format('hh:mm:ss A')}`
                         
                     })
@@ -550,10 +587,14 @@ app.get('/client-login',isLoggedOutU,(req,res)=>{
 app.get('/client-register',isLoggedOutU,(req,res)=>{
     res.render('users/register')
 })
-app.get('/client-dashboard',isLoggedinU,(req,res)=>{
+app.get('/client-dashboard',isLoggedinU,async (req,res)=>{
     const user = req.user
+    const data = await UserLog.findOne({_id:user._id})
+    // console.log(data)
+    const map_api_key = process.env.MAP_API_KEY
+    // console.log(data)
     // console.log(`user logged in is ${req.user}`);
-    res.render('users/udashboard',{user})
+    res.render('users/udashboard',{user,data,map_api_key})
 })
 app.get('/client-new-qr-code',isLoggedinU,(req,res)=>{
     const user = req.user
@@ -570,8 +611,10 @@ app.get('/client-qr/:id',(req,res)=>{
     res.render('users/uqr', {id})
 })
 app.get('/client-map-location',isLoggedinU,async (req,res)=>{
+    // console.log(process.env.MAP_API_KEY)
+    const map_api_key = process.env.MAP_API_KEY
     const user = req.user
-    res.render('users/mymap',{user})
+    res.render('users/mymap',{user,map_api_key})
 })
 app.post('/client-map-save-location',isLoggedinU,async (req,res)=>{
     const {latitude,longitude} = req.body
@@ -580,6 +623,7 @@ app.post('/client-map-save-location',isLoggedinU,async (req,res)=>{
     .then(data=>{
         console.log(data)
     })
+
     res.redirect('/client-map-location')
 })
 app.post('/client-register',(req,res)=>{
@@ -636,6 +680,11 @@ app.post('/client-register',(req,res)=>{
                     await newUser.save()
                         .then(data=>{
                             console.log('Successfully added a client user!');
+                            console.log(data._id)
+                            UserLog.insertMany([
+                                {_id:data._id}]).then(dataz=>{
+                                    console.log('Successfully added a user log')
+                                })
                             id = data._id
                         })
                     res.redirect(`/client-qr/${id}`)
