@@ -24,6 +24,10 @@
         justify-content: center;
         
     }
+    .buttons{
+        margin: 0 auto;
+        margin-top: 10px;
+    }
     .invalid-code{
         display: none;
     }
@@ -35,7 +39,12 @@
         flex-direction: column;
     }
     .button-container{
-        align-self: flex-end;
+        display: flex;
+        flex-direction: column;
+        /* justify-content: space-between;
+        align-self: flex-end; */
+       
+        
     }
     </style>
 </head>
@@ -185,14 +194,14 @@
                             </div>
                             <hr>
                             <div class="button-container">
-                                <a href="/establishments-get-close-contact/<%=userData._id%>/<%=datez%>" class="btn btn-primary">Get Possible Close Contacts</a>
+                                <a href="/establishments-get-close-contact/<%=userData._id%>/<%=datez%>" class="btn btn-primary buttons">Get Possible Close Contacts</a>
                                 <!-- <button class="btn btn-primary first">Get Possible Close Contacts</button> -->
-                                <button type="button" class="btn btn-danger first change" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                <button type="button" class="btn btn-danger first change buttons" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                     Change Status
                                 </button>
                                 <!-- <button class="btn btn-danger first change">Change Status</button> -->
-                                <button class="btn btn-success" id="second">Update</button>
-                                <button class="btn btn-dark" id="second">Cancel</button>
+                                <button class="btn btn-success buttons" id="second">Update</button>
+                                <button class="btn btn-dark buttons" id="second">Cancel</button>
                             </div>
                         </div>
                     </div>

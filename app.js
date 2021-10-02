@@ -215,6 +215,7 @@ app.get('/establishments-user-profile/:id/:datez',isLoggedin,async (req,res)=>{
     const {id,datez} = req.params
     const user = req.user
     const userData = await User.findOne({_id:id})
+    
     res.render('establishments/euserprofile',{user,userData,datez,moment:moment,id})
 })
 app.get('/establishments-change-status-close-contacts/:date/:id',isLoggedin, async(req,res)=>{
@@ -222,9 +223,12 @@ app.get('/establishments-change-status-close-contacts/:date/:id',isLoggedin, asy
     const {date,id} = req.params
     const arr = []
     const data = await Log.findOne({_id:user._id})
+    
     for(let i=0; i<data.logs.length; i++){
+        
         if((data.logs[i].date === moment(date).format('MM/DD/YYYY')) && data.logs[i].id !==id)
         {
+            
             const userz = await User.updateOne({_id:data.logs[i].id},{status:'Close Contact'})
             arr.push(data.logs[i])
         }
@@ -236,9 +240,12 @@ app.get('/establishments-send-notification-close-contacts/:date/:id',isLoggedin,
     const {date,id} = req.params
     const arr = []
     const data = await Log.findOne({_id:user._id})
+    
     for(let i=0; i<data.logs.length; i++){
+        
         if((data.logs[i].date === moment(date).format('MM/DD/YYYY')) && data.logs[i].id !==id)
         {
+            
             const userz = await User.updateOne({_id:data.logs[i].id},{$push:{notification:[{header:`${req.user.businessname}`,
             message:`Your COVID-19 Status has been changed to Close Contact when you entered ${req.user.businessname} on ${date}. If you feel this is a mistake, please feel free to contact or visit us.`,
             time:moment(new Date()).format('hh:mm:ss A'),isSeen:false,date:moment(new Date()).format('MM/DD/YYYY')}]}})
@@ -257,6 +264,7 @@ app.get('/establishments-get-close-contact/:id/:datez',isLoggedin,async(req, res
     const temp = []
     const arr = []
     const container = []
+    
     for(let i=0; i<data.logs.length; i++){
         
         if(moment(data.logs[i].date).format('LL') === datez && data.logs[i].id !== id){
@@ -280,7 +288,7 @@ app.post('/establishments-update-user-status/:id/:date',isLoggedin,async(req,res
     const {id,date,status} = req.params
     const user= req.user
     const update = await User.updateOne({_id:id},{status:req.body.status,$push:{notification:[{header:`${req.user.businessname}`,
-    message:`Your COVID-19 Status has been changed to ${req.body.status} when you entered ${req.user.businessname} on ${date}. If you feel this is a mistake, please feel free to contact us or visit us`,
+    message:`Your COVID-19 Status has been changed to ${req.body.status} when you entered ${req.user.businessname} on ${date}. If you feel this is a mistake, please feel free to contact or visit us.`,
     time:moment(new Date()).format('hh:mm:ss A'),isSeen:false,date:moment(new Date()).format('MM/DD/YYYY')}]}})
     res.redirect(`/establishments-user-profile/${id}/${date}`)
 })

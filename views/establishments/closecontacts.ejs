@@ -197,8 +197,8 @@
                             
                             <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="change">Change Status</button>
                             <button class="btn btn-warning" onclick="ExportToExcel('xlsx')">Convert to excel</button>
-                            <a href="/establishments-change-status-close-contacts/<%=moment(temp[0]).format('LL')%>/<%=id %> " class="btn btn-primary hidden-change">Change Status</a>
-                            <a href="/establishments-send-notification-close-contacts/<%=moment(temp[0]).format('LL')%>/<%=id %> " class="btn btn-dark hidden-change">Send Notifications</a>
+                            <a href="/establishments-change-status-close-contacts/<%=moment(temp[0].date).format('LL')%>/<%=id %>" class="btn btn-primary hidden-change">Change Status</a>
+                            <a href="/establishments-send-notification-close-contacts/<%=moment(temp[0].date).format('LL')%>/<%=id%>" class="btn btn-dark hidden-change">Send Notifications</a>
                             <button class="btn btn-success hidden-change">Cancel</button>
                             
                         </div>
@@ -230,6 +230,7 @@
                 // alert("YEY")
                 for(let x=0; x<3; x++){
                     unhide[x].classList.remove('hidden-change')
+                    change.style.display = 'none'
                     console.log('nisud')
                 }
                 hidden.click()
@@ -247,6 +248,7 @@
         unhide[2].addEventListener('click',()=>{
             for(let i=0; i<3; i++){
                 unhide[i].classList.add('hidden-change')
+                change.style.display = 'inline-block'
             }
         })
     </script>
