@@ -186,6 +186,9 @@ app.get('/',(req,res)=>{
     
     res.render('main/maindash')
 })
+app.get('/about-us',(req,res)=>{
+    res.render('main/about')
+})
 //ROUTE FOR ESTABLISHMENTS
 app.get('/establishments-logs/:id',isLoggedin,async (req,res)=>{
     const {id} = req.params
