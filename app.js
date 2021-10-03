@@ -666,8 +666,8 @@ app.post('/client-register',(req,res)=>{
                         status: "Negative",
                         notification:[
                             {
-                                header:'CCT',
-                                message:'Thank you for using CCT! This is still under development and the one youre using now is still a prototype.',
+                                header:'Team OSBE',
+                                message:'Thank you for using our Contact Tracer Application! This is still under development and the one youre using now is still a prototype.',
                                 isSeen:false,
                                 date: moment(new Date()).format('MM/DD/YYYY'),
                                 time: moment(new Date()).format('hh:mm:ss A')
