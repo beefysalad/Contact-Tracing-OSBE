@@ -205,12 +205,16 @@
                                     <% } %>
                                 </tbody>
                             </table>
-                            
-                            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="change">Change Status</button>
-                            <button class="btn btn-warning" onclick="ExportToExcel('xlsx')">Convert to excel</button>
-                            <a href="/establishments-change-status-close-contacts/<%=moment(temp[0].date).format('LL')%>/<%=id %>" class="btn btn-primary hidden-change">Change Status</a>
-                            <a href="/establishments-send-notification-close-contacts/<%=moment(temp[0].date).format('LL')%>/<%=id%>" class="btn btn-dark hidden-change">Send Notifications</a>
-                            <button class="btn btn-success hidden-change">Cancel</button>
+                            <% if (temp.length!==0 && arr.length !==0) { %>
+                                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#staticBackdrop" id="change">Change Status</button>
+                                <button class="btn btn-warning" onclick="ExportToExcel('xlsx')">Convert to excel</button>
+                                <a href="/establishments-change-status-close-contacts/<%=moment(temp[0].date).format('LL')%>/<%=id %>" class="btn btn-primary hidden-change">Change Status</a>
+                                <a href="/establishments-send-notification-close-contacts/<%=moment(temp[0].date).format('LL')%>/<%=id%>" class="btn btn-dark hidden-change">Send Notifications</a>
+                                <button class="btn btn-success hidden-change">Cancel</button>
+                            <% } else {%>
+                                <a href="/establishments-user-profile/<%=id%>/<%=moment(new Date()).format('LL')%>" class="btn btn-warning">Back</a>
+                            <% } %>
+                           
                             
                         </div>
                     </div>

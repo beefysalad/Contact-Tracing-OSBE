@@ -210,7 +210,6 @@ app.get('/establishments-scanqr/:cam_num',isLoggedin,(req,res)=>{
     res.render('establishments/escanner',{cam_num,user})
 })
 app.get('/establishments-map-location',isLoggedin,async (req,res)=>{
-    // console.log(process.env.MAP_API_KEY)
     const map_api_key = process.env.MAP_API_KEY
     const user = req.user
     res.render('establishments/map',{user,map_api_key})
@@ -260,7 +259,6 @@ app.get('/establishments-change-status-close-contacts/:date/:id',isLoggedin, asy
         
         if((data.logs[i].date === moment(date).format('MM/DD/YYYY')) && data.logs[i].id !==id)
         {
-            
             const userz = await User.updateOne({_id:data.logs[i].id},{status:'Close Contact'})
             arr.push(data.logs[i])
         }
@@ -302,12 +300,8 @@ app.get('/establishments-get-close-contact/:id/:datez',isLoggedin,async(req, res
         if(moment(data.logs[i].date).format('LL') === datez && data.logs[i].id !== id){
             
             temp.push(data.logs[i])
-            // container.push(data.logs[i])
-            // console.log(`temp ${temp}`)
-            // console.log(`container ${container}`)
             
         }
-        
         
     }
     for(let i=0; i<temp.length; i++){
@@ -315,6 +309,7 @@ app.get('/establishments-get-close-contact/:id/:datez',isLoggedin,async(req, res
         arr.push(d)
     }
     res.render('establishments/closecontacts',{user,temp,arr,moment:moment,id})
+    
 })
 app.post('/establishments-update-user-status/:id/:date',isLoggedin,async(req,res)=>{
     const {id,date,status} = req.params
@@ -478,7 +473,7 @@ app.get('/client-profile/edit',isLoggedinU,(req,res)=>{
 })
 app.get('/client-delete-notification/:id/:notinum',isLoggedinU,async (req,res)=>{
     const {id,notinum} = req.params
-    // console.log(id)
+
     const user = req.user
     const data = await User.updateOne({_id:req.user._id},{"$pull":{"notification":{"_id":id}}},{safe:true, multi:true})
     res.redirect(`/client/notifications/${notinum}`)
@@ -489,18 +484,18 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
     let newPass
     User.findById(user._id,(err,user)=>{
         
-        // if(req.file.path === undefined && req.body.opassword == '')
+       
         if((! req.file || ! req.file.path) && req.body.opassword == '')
         {
             console.log("1");
          
-            // console.log(user._id);
+         
             User.updateOne({_id:user._id},{emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address}).then(data=>{
                
                 res.redirect('/client-profile')
             })
         } 
-        // else if(req.file.path === undefined && req.body.opassword != '')
+  
         else if((! req.file || ! req.file.path) && req.body.opassword != '')
         {
             console.log("2");
@@ -511,21 +506,19 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
                     res.redirect('/client-profile/edit')
                 }else{
                     bcrypt.genSalt(10,function(err,salt){
-                        // if(err) return next()
+                        
                         bcrypt.hash(req.body.password,salt,async function(err,hash){
                             if(err){
                                 console.log("NI ERROR CHUY");
                             }
-                            // console.log(req.body.password);
+                           
                             newPass = await hash
-                            // console.log("NEWW PASS");
-                            // console.log(newPass);
+                         
                             User.updateOne({_id:user._id},{password:newPass,emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address,}).then(data=>{
-                                // console.log("data");
-                                // console.log(data);
+                              
                                 res.redirect('/client-profile')
                             })
-                            // console.log(hash);
+                           
                         })
                     })
                 }
@@ -533,17 +526,17 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
             })
           
         }
-        // else if(req.body.opassword == '' && req.file.path !== undefined)
+        
         else if(req.body.opassword == '' && (req.file.path || req.file))
         {
             console.log("3");
-            // console.log(user._id);
+          
             User.updateOne({_id:user._id},{emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address,image:req.file.path}).then(data=>{
               
                 res.redirect('/client-profile')
             })
         }
-        // else if(req.body.opassword != '' && req.file.path !==undefined)
+        
         else if(req.body.opassword != '' && (req.file.path || req.file))
         {
             console.log("4");
@@ -554,21 +547,19 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
                     res.redirect('/client-profile/edit')
                 }else{
                     bcrypt.genSalt(10,function(err,salt){
-                        // if(err) return next()
+                        
                         bcrypt.hash(req.body.password,salt,async function(err,hash){
                             if(err){
                                 console.log("NI ERROR CHUY");
                             }
-                            // console.log(req.body.password);
+                          
                             newPass = await hash
-                            // console.log("NEWW PASS");
-                            // console.log(newPass);
+                          
                             User.updateOne({_id:user._id},{password:newPass,emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address,image:req.file.path}).then(data=>{
-                                // console.log("data");
-                                // console.log(data);
+                               
                                 res.redirect('/client-profile')
                             })
-                            // console.log(hash);
+                           
                         })
                     })
                 }
