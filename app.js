@@ -182,6 +182,7 @@ passport.deserializeUser(function(id,done){
 
 //ROUTES
 //ROUTE FOR MAIN
+
 app.get('/',(req,res)=>{
     
     res.render('main/maindash')
@@ -375,7 +376,6 @@ app.post('/give-qr/:cam_num',(req,res)=>{
         }else{
             req.flash('error','User does not exist!')
             // res.redirect(`/establishments-scanqr/${cam_num}`)
-            
             res.render(`establishments/escanner`,{cam_num,user})
         }
     })
