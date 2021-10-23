@@ -21,6 +21,8 @@ const cloudinary = require('cloudinary').v2
 const {CloudinaryStorage} = require('multer-storage-cloudinary')
 const { truncate } = require('fs/promises')
 const nodemailer = require('nodemailer')
+let generator = require('generate-password')
+
 dotenv.config()
 console.clear()
 //MULTER FOR STORAGING IMAGE
@@ -188,8 +190,96 @@ app.get('/',(req,res)=>{
     
     res.render('main/maindash')
 })
+app.get('/forget-password/:type',async (req,res)=>{
+    const {type} = req.params
+    console.log(type)
+    res.render('main/forget',{type})
+})
 app.get('/about-us',(req,res)=>{
     res.render('main/about')
+})
+app.post('/forget-password/:type',async (req,res)=>{
+    const {type} = req.params
+    const {username,emailAddress} = req.body
+    console.log(`nabuang ${emailAddress}`)
+    let transporter = nodemailer.createTransport({
+        port:587,
+        secure: false,
+        service: 'gmail',
+        auth:{
+            user: 'contact.tracer.osbe@gmail.com', // generated ethereal user
+            pass: 'topibakat', // generated ethereal password
+        },
+    })
+    if(type==='client'){
+        User.findOne({username:username},async(err,userz)=>{
+            if(err) return err
+            if(userz.emailAddress!==emailAddress){
+                console.log(userz.emailAddress)
+                req.flash('error','Email Address does not match!')
+                res.redirect('/forget-password/client')
+            }else{
+                let password = generator.generate({
+                    length:10,
+                    numbers:true
+                })
+                
+                let info = await transporter.sendMail({
+                    from: 'contact.tracer.osbe@gmail.com',
+                    to: userz.emailAddress,
+                    subject: 'Reset Password',
+                    html:`Your new password is <b>${password}</b>`
+                })
+                bcrypt.genSalt(10,function(err,salt){
+                    if(err) return next()
+                    bcrypt.hash(password,salt,async(err,hash)=>{
+                        if(err) return next(err)
+                        User.updateOne({username:userz.username},{password:hash}).then(data=>console.log(data))
+                    })
+                })
+                res.redirect('/client-login')
+            }
+            
+        })
+        console.log('client dodong')
+        // res.redirect(`/client-login`)
+    }else if(type==='establishment'){
+        console.log("NAKA SUD SA ESTBLISH")
+        Establishment.findOne({username:username},async(err,userz)=>{
+            if(err) return err
+            console.log(userz)
+            if(userz.email!==emailAddress){
+                console.log(userz.email)
+                req.flash('error','Email Address does not match!')
+                res.redirect('/forget-password/establishment')
+            }else{
+                let password = generator.generate({
+                    length:10,
+                    numbers:true
+                })
+                let info = await transporter.sendMail({
+                    from: 'contact.tracer.osbe@gmail.com',
+                    to: userz.email,
+                    subject: 'Reset Password',
+                    html:`Your new password is <b>${password}</b>`
+                })
+                bcrypt.genSalt(10,function(err,salt){
+                    if(err) return next()
+                    bcrypt.hash(password,salt,async(err,hash)=>{
+                        if(err) return next(err)
+                        Establishment.updateOne({username:userz.username},{password:hash}).then(data=>console.log(data))
+                    })
+                })
+                res.redirect('/establishments-login')
+            }
+            
+        })
+        // res.redirect('/establishments-login')
+    }
+    // res.redirect('/')
+    // 
+    // console.log(`hehe ${username } ${emailAddress}`)
+    // console.log(`this is a test ${type}`)
 })
 //ROUTE FOR ESTABLISHMENTS
 app.get('/establishments-logs/:id',isLoggedin,async (req,res)=>{
@@ -729,11 +819,6 @@ app.use((err,req,res,next)=>{
 })
 
 app.use((err,req,res,next)=>{
-    // console.log('**********************')
-    // console.log('********ERROR********')
-    // console.log('**********************')
-    // console.log(err)
-    // res.status(500).send('OH BOY WE GOT AN ERROR')
     console.log(err)
     res.status(500).render('errorpage/500')
 })

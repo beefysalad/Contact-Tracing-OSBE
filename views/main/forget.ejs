@@ -9,70 +9,66 @@
         <script type="text/javascript"src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
         <style>
-        .main{
-           display: flex;
-            justify-content: center;
-        }
-        .but{
-            transition: 0.2s;
-        }
-        .but:hover,.but:focus{
-            transform: translateY(-0.25em);
-        }
-        .right-content{
-            margin-top: 13px;
-            /* margin-left: -12px; */
-            width: 700px;
-            height: 475px;
-            box-shadow: 0 0 55px 0 black;
-            border-radius: 5px;
-        }
-        a{
-            text-decoration: none;
-        }
-        .formz{
-            padding: 35px;
-        }
-        @media (max-width:574px) {
-          .right-content{
-              width: 500px;
-          }
-          .formz{
-            padding: 15px;
+            .left-content{
+                /* background-color: white; */
+                width: 700px;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 5px 5px 34px black;
+                margin: 0 auto;
+                /* height: 500px; */
             }
-        }
-        @media (max-width: 466px) {
-            .right-content{
-                width: 350px;
+            .formz{
+            padding: 20px;
             }
-        }
-        #introCarousel,
-        .carousel-inner,
-        .carousel-item,
-        .carousel-item.active {
-            height: 100vh;
-        }
+            .but{
+                transition: 0.2s;
+            }
+            .but:hover,.but:focus{
+                transform: translateY(-0.25em);
+            }
+            #toast-container>div{
+              box-shadow: none;
+            }
+            #introCarousel,
+            .carousel-inner,
+            .carousel-item,
+            .carousel-item.active {
+                height: 100vh;
+            }
 
-        .carousel-item:nth-child(1) {
-             background-image: url('/images/bgestablishment.jpg');
-            background-repeat: no-repeat;
-            background-size: cover;
-            background-position: center center;
-        }
-
+            .carousel-item:nth-child(1) {
+                background-image: url('/images/bgestablishment.jpg');
+                background-repeat: no-repeat;
+                background-size: cover;
+                background-position: center center;
+            }
+            a{
+              text-decoration: none;
+            }
             /* Height for devices larger than 576px */
-        @media (min-width: 992px) {
-            #introCarousel {
-            margin-top: -58.59px;
+            @media (min-width: 992px) {
+                #introCarousel {
+                margin-top: -58.59px;
+                }
             }
-        }
 
-        .navbar .nav-link {
-            color: #fff !important;
-        }
-           
+            .navbar .nav-link {
+                color: #fff !important;
+            }
+            @media (max-width: 710px) {
+                .left-content{
+                    width: 450px;
+                }
+            }
+            @media (max-width: 500px) {
+                .left-content{
+                    width: 350px;
+                    padding: 15px;
+                }
+            }
         </style>
-    <title>Establishment | Login</title>
+    <title>Forgot Password</title>
 </head>
 <body>
     <header>
@@ -102,11 +98,12 @@
                       role="button"
                       data-mdb-toggle="dropdown"
                       aria-expanded="false"
-                    >User Portals
+                    >
+                      User Portals
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <li>
-                        <a class="dropdown-item" href="/client-login">User Portal</a>
+                        <a class="dropdown-item" href="#">User Portal</a>
                       </li>
                       <li>
                         <a class="dropdown-item" href="/establishments-login">Establishment Portal</a>
@@ -144,57 +141,45 @@
             </div>
           </nav>
     
-    <div id="introCarousel" class="carousel slide carousel-fade shadow-2-strong" data-mdb-ride="carousel" data-interval="100">
-            
-        <div class="carousel-inner">
+        <div id="introCarousel" class="carousel slide carousel-fade shadow-2-strong" data-mdb-ride="carousel" data-interval="100">
+          <div class="carousel-inner">
             <div class="carousel-item active">
               <div class="mask" style="background-color: rgba(0, 0, 0, 0.6);">
                 <div class="d-flex justify-content-center align-items-center h-100">
-                    <div class="container">
-                        <div class="row main">
-                            <div class="col-md-6 right-content bg-light">
-                                <form action="/elogin" method="POST">
-                                    <div class="container">
-                                        <div class="row d-flex justify-content-center flex-column formz">
-                                            <div class="text-center mt-4">
-                                                <h4>Establishment Portal</h4>
-                                            </div>
-                                            <% if (messages.error) { %>
-                                              <button class="btn btn-primary" id="triggerBut" style="display: none;"></button>
-                                                <!-- <h4 class="text-danger"><%= messages.error %> </h4> -->
-                                            <% } %>
-                                            <!-- <p style="color: red;">Invalid username or password!</p> -->
-                                            <div class="col ">
-                                                <label class="form-label" for="username">Username</label>
-                                                <input placeholder="Username" class="form-control" type="text" name="username" id="username" required>
-                                            </div>
-                                            <div class="col">
-                                                <label class="form-label mt-4" for="password">Password</label>
-                                                <input placeholder="Password" class="form-control" type="password" name="password" id="password" required>
-                                            </div>
-                                            <div class="form-check col mt-4 mx-3">
-                                                <input class="form-check-input" type="checkbox" name="shp" value="ah" id="shp">
-                                                <label class="form-check-label" for="shp">Show Password</label>
-                                            </div>
-                                            <button class="btn btn-dark mt-3 but">Log-in</button>
-                                            <hr class="mt-3">
-                                            <div class="form-text text-center">
-                                                <a href="/establishments-registration">Get an establishment account</a>
-                                            </div>
-                                            <div class="form-text text-center">
-                                                <a href="/forget-password/establishment">Forgot Password</a>
-                                            </div>
-                                        </div>
+                    <div class="left-content bg-light">
+                        <h4 class="text-dark text-center mt-2">Recover Password</h4>
+                        <div class="text-center">Don't worry, it happens to the best of us.</div>
+                        <!-- <p class="text-center"></p> -->
+                        <form action="/forget-password/<%=type%>" method="POST">
+                            <div class="container">
+                                <div class="row d-flex justify-content-center flex-column formz">
+                                    <% if (messages.error) { %>
+                                      <button class="btn btn-primary" id="triggerBut" style="display: none;"></button>
+                                        <!-- <h4 class="text-danger"><%= messages.error %> </h4> -->
+                                    <% } %>
+                                    <div class="col">
+                                        <label for="username" class="form-label">Username</label>
+                                        <input class="form-control" type="text" name="username" id="username" placeholder="Username" required>
                                     </div>
-                                </form>
+                                    <div class="col mt-3">
+                                        <label for="emailAddress" class="form-label">Email Address</label>
+                                        <input class="form-control" type="email" name="emailAddress" id="emailAddress" placeholder="Email Address" required>
+                                        <hr class="mt-4">
+                                    </div>
+                                    
+                                  <!-- <hr class="mt-5"> -->
+                                    <button class="btn btn-dark mt-2 but">Reset Password</button>
+                                   
+                                </div>
                             </div>
-                        </div>
+                        </form>
+                        
                     </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-    </div>
       </header>
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -222,23 +207,7 @@
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
             }
-            toastr["error"]("Username or password is invalid!", "Invalid Credentials")
-        })
-    </script>
-      <script>
-        const shp = document.querySelector('#shp')
-        const password = document.querySelector('#password')
-        shp.value = 'on'
-        shp.addEventListener('change',()=>{
-            if(shp.value==='on'){
-                password.setAttribute('type','text')
-               
-                shp.value='off'
-            }else if(shp.value==='off'){
-                password.setAttribute('type','password')
-               
-                shp.value='on'
-            }
+            toastr["error"]("Email Address or username does not exist!", "Invalid Credentials")
         })
     </script>
 </body>
