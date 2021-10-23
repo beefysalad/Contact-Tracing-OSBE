@@ -297,7 +297,7 @@ app.get('/establishments-send-notification-close-contacts/:date/:id',isLoggedin,
                 from: 'contact.tracer.osbe@gmail.com',
                 to: use.emailAddress,
                 subject: 'COVID 19 Status',
-                text:`Your COVID-19 Status has been changed to Close Contact when you entered ${req.user.businessname} on ${date}. If you feel this is a mistake, please feel free to contact or visit us.`
+                html:`<p style='font-size:15px;'>Your COVID-19 Status has been changed to <b style='color:orange;'>Close Contact</b> when you entered <span style='color:red;'>${req.user.businessname}</span> on ${date}. If you feel this is a mistake, please feel free to contact or visit us.</p>`
             })
         }
     }
@@ -336,6 +336,23 @@ app.post('/establishments-update-user-status/:id/:date',isLoggedin,async(req,res
     const update = await User.updateOne({_id:id},{status:req.body.status,$push:{notification:[{header:`${req.user.businessname}`,
     message:`Your COVID-19 Status has been changed to ${req.body.status} when you entered ${req.user.businessname} on ${date}. If you feel this is a mistake, please feel free to contact or visit us.`,
     time:moment(new Date()).format('hh:mm:ss A'),isSeen:false,date:moment(new Date()).format('MM/DD/YYYY')}]}})
+    let transporter = nodemailer.createTransport({
+        port:587,
+        secure: false,
+        service: 'gmail',
+        auth:{
+            user: 'contact.tracer.osbe@gmail.com', // generated ethereal user
+            pass: 'topibakat', // generated ethereal password
+        },
+    })
+    const use = await User.findOne({_id:id})
+    // console.log(use)
+    let info = await transporter.sendMail({
+        from: 'contact.tracer.osbe@gmail.com',
+        to: use.emailAddress,
+        subject: 'COVID 19 Status',
+        html:`<p style='font-size:15px;'>Your COVID-19 Status has been changed to <b style='color:orange;'>${req.body.status}</b> when you entered <span style='color:red;'>${req.user.businessname}</span> on ${date}. If you feel this is a mistake, please feel free to contact or visit us.</p>`
+    })
     res.redirect(`/establishments-user-profile/${id}/${date}`)
 })
 app.get('/establishments-dashboard',isLoggedin,async (req,res)=>{
