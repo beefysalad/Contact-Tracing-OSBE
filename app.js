@@ -20,6 +20,7 @@ const dotenv = require('dotenv')
 const cloudinary = require('cloudinary').v2
 const {CloudinaryStorage} = require('multer-storage-cloudinary')
 const { truncate } = require('fs/promises')
+const nodemailer = require('nodemailer')
 dotenv.config()
 console.clear()
 //MULTER FOR STORAGING IMAGE
@@ -281,6 +282,23 @@ app.get('/establishments-send-notification-close-contacts/:date/:id',isLoggedin,
             message:`Your COVID-19 Status has been changed to Close Contact when you entered ${req.user.businessname} on ${date}. If you feel this is a mistake, please feel free to contact or visit us.`,
             time:moment(new Date()).format('hh:mm:ss A'),isSeen:false,date:moment(new Date()).format('MM/DD/YYYY')}]}})
             arr.push(data.logs[i])
+            let transporter = nodemailer.createTransport({
+                port:587,
+                secure: false,
+                service: 'gmail',
+                auth:{
+                    user: 'contact.tracer.osbe@gmail.com', // generated ethereal user
+                    pass: 'topibakat', // generated ethereal password
+                },
+            })
+            const use = await User.findOne({_id:data.logs[i].id})
+            // console.log(use)
+            let info = await transporter.sendMail({
+                from: 'contact.tracer.osbe@gmail.com',
+                to: use.emailAddress,
+                subject: 'COVID 19 Status',
+                text:`Your COVID-19 Status has been changed to Close Contact when you entered ${req.user.businessname} on ${date}. If you feel this is a mistake, please feel free to contact or visit us.`
+            })
         }
     }
     res.redirect(`/establishments-get-close-contact/${id}/${date}`)
