@@ -710,26 +710,19 @@ app.get('/client-dashboard',isLoggedinU,async (req,res)=>{
     const data = await UserLog.findOne({_id:user._id})
     const current_date = moment(new Date()).format('MM/DD/YYYY')
     let data_arr = []
-    // console.log(current_date)
-    // const diff = moment(current_date).diff(ndate,'days') 
     for(let i=0; i<data.userlog.length; i++){
-        // console.log(data.userlog[i].date)
-        // console.log(moment(current_date).diff(data.userlog[i].date,'days'))
+     
         if((moment(current_date).diff(data.userlog[i].date,'days'))<21){
-            // console.log(data.userlog[i])
+           
             data_arr.push(data.userlog[i])
-            // console.log((moment(current_date).diff(data.userlog[i].date,'days')))
-            // data_arr.push(data.userlog[i])
+         
         }
-        // console.log(current_date)
-        // console.log(moment(current_date).diff(data.userlog[i].date,'days'))
+
 
     }
-    console.log(`data ${data_arr}`)
-    // console.log(data)
+   
     const map_api_key = process.env.MAP_API_KEY
-    // console.log(data)
-    // console.log(`user logged in is ${req.user}`);
+  
     res.render('users/udashboard',{user,data,map_api_key,data_arr})
 })
 app.get('/client-new-qr-code',isLoggedinU,(req,res)=>{
