@@ -201,7 +201,7 @@ app.get('/about-us',(req,res)=>{
 app.post('/forget-password/:type',async (req,res)=>{
     const {type} = req.params
     const {username,emailAddress} = req.body
-    console.log(`nabuang ${emailAddress}`)
+
     let transporter = nodemailer.createTransport({
         port:587,
         secure: false,
@@ -215,7 +215,7 @@ app.post('/forget-password/:type',async (req,res)=>{
         User.findOne({username:username},async(err,userz)=>{
             if(err) return err
             if(userz.emailAddress!==emailAddress){
-                console.log(userz.emailAddress)
+                // console.log(userz.emailAddress)
                 req.flash('error','Email Address does not match!')
                 res.redirect('/forget-password/client')
             }else{
@@ -234,22 +234,23 @@ app.post('/forget-password/:type',async (req,res)=>{
                     if(err) return next()
                     bcrypt.hash(password,salt,async(err,hash)=>{
                         if(err) return next(err)
-                        User.updateOne({username:userz.username},{password:hash}).then(data=>console.log(data))
+                        User.updateOne({username:userz.username},{password:hash}).then()
                     })
                 })
+                req.flash('success','Password request sent! Please check your inbox or spam folder for your new password')
                 res.redirect('/client-login')
             }
             
         })
-        console.log('client dodong')
+        // console.log('client dodong')
         // res.redirect(`/client-login`)
     }else if(type==='establishment'){
-        console.log("NAKA SUD SA ESTBLISH")
+        // console.log("NAKA SUD SA ESTBLISH")
         Establishment.findOne({username:username},async(err,userz)=>{
             if(err) return err
-            console.log(userz)
+            // console.log(userz)
             if(userz.email!==emailAddress){
-                console.log(userz.email)
+                // console.log(userz.email)
                 req.flash('error','Email Address does not match!')
                 res.redirect('/forget-password/establishment')
             }else{
@@ -267,19 +268,17 @@ app.post('/forget-password/:type',async (req,res)=>{
                     if(err) return next()
                     bcrypt.hash(password,salt,async(err,hash)=>{
                         if(err) return next(err)
-                        Establishment.updateOne({username:userz.username},{password:hash}).then(data=>console.log(data))
+                        Establishment.updateOne({username:userz.username},{password:hash}).then()
                     })
                 })
+                req.flash('success','Password request sent! Please check your inbox or spam folder for your new password')
                 res.redirect('/establishments-login')
             }
             
         })
-        // res.redirect('/establishments-login')
+       
     }
-    // res.redirect('/')
-    // 
-    // console.log(`hehe ${username } ${emailAddress}`)
-    // console.log(`this is a test ${type}`)
+    
 })
 //ROUTE FOR ESTABLISHMENTS
 app.get('/establishments-logs/:id',isLoggedin,async (req,res)=>{
@@ -709,11 +708,29 @@ app.get('/client-register',isLoggedOutU,(req,res)=>{
 app.get('/client-dashboard',isLoggedinU,async (req,res)=>{
     const user = req.user
     const data = await UserLog.findOne({_id:user._id})
+    const current_date = moment(new Date()).format('MM/DD/YYYY')
+    let data_arr = []
+    // console.log(current_date)
+    // const diff = moment(current_date).diff(ndate,'days') 
+    for(let i=0; i<data.userlog.length; i++){
+        // console.log(data.userlog[i].date)
+        // console.log(moment(current_date).diff(data.userlog[i].date,'days'))
+        if((moment(current_date).diff(data.userlog[i].date,'days'))<21){
+            // console.log(data.userlog[i])
+            data_arr.push(data.userlog[i])
+            // console.log((moment(current_date).diff(data.userlog[i].date,'days')))
+            // data_arr.push(data.userlog[i])
+        }
+        // console.log(current_date)
+        // console.log(moment(current_date).diff(data.userlog[i].date,'days'))
+
+    }
+    console.log(`data ${data_arr}`)
     // console.log(data)
     const map_api_key = process.env.MAP_API_KEY
     // console.log(data)
     // console.log(`user logged in is ${req.user}`);
-    res.render('users/udashboard',{user,data,map_api_key})
+    res.render('users/udashboard',{user,data,map_api_key,data_arr})
 })
 app.get('/client-new-qr-code',isLoggedinU,(req,res)=>{
     const user = req.user

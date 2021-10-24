@@ -284,6 +284,7 @@ crossorigin=""></script>
         </div>
         <!-- MODAL -->
         <p style="display: none;" class="api_key"><%=map_api_key%> </p>
+       
         <div class="container pt-4">
           <div class="card mt-2">
             <div class="card-header bg-dark text-white">
@@ -300,6 +301,28 @@ crossorigin=""></script>
                         </tr>
                     </thead>
                     <tbody>
+                      <% if (data_arr) { %>
+                          <% for( let index = 0; index < data_arr.length; index++ ) { %>
+                            <tr>
+                              <td><%=data_arr[index].establishment_name%></td>
+                                <td><%=data_arr[index].date%></td>
+                                <td><%= data_arr[index].time %> </td>
+                                <% if (data_arr[index].location.latitude === '' && data_arr[index].location.longitude ==='') { %>
+                                  <td class="location"><button class="geo"><%=data_arr[index].address%> </button></td>
+                                <% } else {%>
+                                  <td>
+                                    <a style="display: none;" href="#" class="target-index"></a>
+                                    <button class="geo text-primary" id="geoaddress" onclick="showModal(this)"></button>
+                                    <p  style="display: none;" id="latitude"><%=data_arr[index].location.latitude%></p>
+                                    <p  style="display: none;" id="longitude"><%=data_arr[index].location.longitude%></p>
+                                  </td>
+                                <% } %>
+                            </tr>
+                                
+                          <% } %>
+                      <% } %>
+                    </tbody>
+                    <!-- <tbody>
                         <% if (data) { %>
                             <% for( let index = 0; index < data.userlog.length; index++ ) { %>
                                 
@@ -317,14 +340,12 @@ crossorigin=""></script>
                                             <p  style="display: none;" id="longitude"><%=data.userlog[index].location.longitude%></p>
                                         </td>
                                     <% } %>
-                                   
-                                    
                                 </tr>
                             <% } %>
                         <% } %>
                       
                        
-                    </tbody>
+                    </tbody> -->
                 </table>
             
             </div>
