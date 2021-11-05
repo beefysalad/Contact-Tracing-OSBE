@@ -714,7 +714,7 @@ app.get('/client-qr/:id',(req,res)=>{
     res.render('users/uqr', {id})
 })
 app.get('/client-map-location',isLoggedinU,async (req,res)=>{
-    // console.log(process.env.MAP_API_KEY)
+    
     const map_api_key = process.env.MAP_API_KEY
     const user = req.user
     res.render('users/mymap',{user,map_api_key})
@@ -724,7 +724,7 @@ app.post('/client-map-save-location',isLoggedinU,async (req,res)=>{
     const user = req.user
     User.updateOne({_id:user._id}, {$set:{'coordinates.latitude':latitude,'coordinates.longitude':longitude}})
     .then(data=>{
-        // console.log(data)
+      
     })
 
     res.redirect('/client-map-location')
@@ -733,13 +733,13 @@ app.post('/client-register',(req,res)=>{
     const{firstName,lastName,username,birthDate,address,emailAddress,contactNumber,gender,password,latitude,longitude} = req.body
     let genPic
     if(gender==='Male'){
-        // console.log('nisud sa male');
+       
         genPic = 'https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultmale_xwnrss.jpg'
     }else if(gender==='Female'){
-        // console.log('nisud sa female');
+       
         genPic = 'https://res.cloudinary.com/dhqqwdevm/image/upload/v1631383900/DEV/defaultfemale_j2cqjd.jpg'
     }
-    // if(latitude.value!=='' && longitude.value!=='')
+   
     
     User.findOne({username:username},(err,user)=>{
         if(user){
@@ -782,11 +782,10 @@ app.post('/client-register',(req,res)=>{
                     let id
                     await newUser.save()
                         .then(data=>{
-                            // console.log('Successfully added a client user!');
-                            // console.log(data._id)
+                            
                             UserLog.insertMany([
                                 {_id:data._id}]).then(dataz=>{
-                                    // console.log('Successfully added a user log')
+                                    
                                 })
                             id = data._id
                         })
@@ -797,17 +796,16 @@ app.post('/client-register',(req,res)=>{
     })
 })
 app.use((err,req,res,next)=>{
-    // res.status(404).send('TO DO PANI ANG ERROR PAGE PARA SA UNKNOWN ROUTES!')
-    // console.log(err)
+    
     res.status(404).render('errorpage/404')
 })
 
 app.use((err,req,res,next)=>{
-    // console.log(err)
+    
     res.status(500).render('errorpage/500')
 })
 app.use((err,req,res,next)=>{
-    // console.log(err)
+   
     res.status(401).render('errorpage/401')
 })
 
