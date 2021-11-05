@@ -311,15 +311,15 @@ app.post('/establishments-save-map-location',isLoggedin,async(req,res)=>{
 app.patch('/establishments-account-setting',isLoggedin,async(req,res)=>{
     const user = req.user
     let newPass
-    // console.log(req.body.currentPassword)
+    
     Establishment.findById(user._id,(err,userz)=>{
         if(req.body.currentPassword == ''){
-            console.log('1')
+            
             res.redirect('/establishments-account-settings')
         }
         else if(req.body.currentPassword!=''){
             bcrypt.compare(req.body.currentPassword,userz.password,(err,resz)=>{
-                console.log(`test ${userz.password}`)
+                
                 if(err) return done(err)
                 if(resz==false){
                     req.flash('error','Current password isnt correct')
@@ -331,12 +331,10 @@ app.patch('/establishments-account-setting',isLoggedin,async(req,res)=>{
 
                             }
                             newPass = await hash
-                            console.log(newPass)
-                            console.log(userz._id)
                             Establishment.updateOne({_id:userz._id},{
                                 password:newPass
                             }).then(data=>{
-                                // console.log(data)
+                                
                                 res.redirect('/establishments-account-settings')
                             })
 
