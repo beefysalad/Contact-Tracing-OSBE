@@ -1,5 +1,5 @@
 <%- include('../partials/header') %> 
-<title>All Logs</title>
+<title>Account Settings</title>
 <style>
     .control{
         width: 40px;
@@ -12,6 +12,10 @@
     .crt{
         display: none;
     }
+    .user-name{
+        text-decoration: none;
+    }
+    .dataTable > thead > tr > th[class*=sort]:after{ display:none; }
     .targetz{
         background-color: rgb(13, 110, 253);
     }
@@ -25,24 +29,14 @@
         height: 30px;
         border-radius: 50%;
     }
-    .user-name{
-        text-decoration: none;
+    .button-flex{
+        display: flex;
+        justify-content: end;
     }
-    table.dataTable thead>tr>th.sorting_asc,
-    table.dataTable thead>tr>th.sorting_desc,
-    table.dataTable thead>tr>th.sorting,
-    table.dataTable thead>tr>td.sorting_asc,
-    table.dataTable thead>tr>td.sorting_desc,
-    table.dataTable thead>tr>td.sorting {
-        padding-right: 8px;
-    }
-    
-    th.sorting_asc::after,
-    th.sorting_desc::after {
-    content:"" !important;
-    }
-    .dataTable > thead > tr > th[class*=sort]:after{ display:none; }
     @media (max-width: 376px){
+        body{
+            background-color: pink;
+        }
         tr{
             font-size: 10px;
         }
@@ -61,7 +55,7 @@
             <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="/establishments-account-settings">Account Settings</a></li>
+                    <li><a class="dropdown-item" href="#!">Account Settings</a></li>
                     <li><hr class="dropdown-divider" /></li>
                     <li><a class="dropdown-item" href="/logoutE">Logout</a></li>
                 </ul>
@@ -88,8 +82,8 @@
                         </a>
                         <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne" data-bs-parent="#sidenavAccordion">
                             <nav class="sb-sidenav-menu-nested nav">
-                                <a class="nav-link" href="/establishments-dashboard">Todays Logs</a>
-                                <a class="nav-link" href="#">All Logs</a>
+                                <a class="nav-link" href="#">Todays Logs</a>
+                                <a class="nav-link" href="/establishments-logs/<%= user._id %> ">All Logs</a>
                                 
                             </nav>
                         </div>
@@ -126,64 +120,57 @@
             <main>
                 <div class="container-fluid px-4">
                     <div class="card mt-5">
-                        <div class="card-header">
-                            <i class="fas fa-table me-1"></i>
-                            All logs
+                        <div class="card-header bg-dark text-light">
+                            <i class="fa-solid fa-map"></i> User Settings
                         </div>
                         <div class="card-body">
-                            <table class="table table-light table-striped table-hover" id="example" style="width: 100%">
-                                <thead>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col"></th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Age</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Time in</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col"></th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Age</th>
-                                        <th scope="col">Status</th>
-                                        <th scope="col">Date</th>
-                                        <th scope="col">Time in</th>
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                    <% if (data && arr) { %>
-                                        <% for( let index = 0; index < data.logs.length; index++ ) { %>
-                                                <!-- put condition here to check if theyre logged on the current date -->
-                                                <tr>
-                                                    <td class="current_logs"> <b><%= index+1 %></b> </td>
-                                                    <td class="current_logs"><img class="control" src="<%=arr[index].image%>" alt=""></td>
-                                                    <td class="current_logs"><a href="/establishments-user-profile/<%= arr[index]._id%>/<%=moment(data.logs[index].date).format('LL') %>" class="user-name"><%= arr[index].firstName %> <%= arr[index].lastName %></a></td>
-                                                    <td class="current_logs"><%= moment().diff(new Date(arr[index].birthDate).toISOString(),'years') %> </td>
-                                                    <% if (arr[index].status === 'Negative') { %>
-                                                        <td class="current_logs text-success"><%=arr[index].status %></td>
-                                                    <% } else if(arr[index].status === 'Positive') { %>
-                                                        <td class="current_logs text-danger"><%=arr[index].status %></td>
-                                                    <% } else if(arr[index].status === 'Close Contact') {%>
-                                                        <td class="current_logs text-warning"><%=arr[index].status %></td>
-                                                    <% } %>
-                                                    <td class="current_logs"><%= data.logs[index].date %></td>
-                                                    <td class="current_logs"><%= data.logs[index].time %> </td>
-                                                </tr>
-                                        <% } %>
-                                    <% } %>
-                                </tbody>
-                            </table>
-                            <a href="/establishments-dashboard" class="btn btn-primary">Go Back</a>
-                            <button class="btn btn-warning" onclick="ExportToExcel('xlsx')">Convert to excel</button>
+                            <!-- action="/client-profile/edit?_method=PATCH" method="POST" -->
+                            <form action="/establishments-account-setting?_method=PATCH" method="POST">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-4 mt-2">
+                                            <label for="businessNo" class="form-label">Business No.</label>
+                                            <input value="<%=user.businessnumber%>" readonly type="text" name="businessNo" id="businessNi" class="form-control">
+                                        </div>
+                                        <div class="col-md-4 mt-2">
+                                            <label for="contactPerson" class="form-label">Contact Person</label>
+                                            <input type="text" name="contactPerson" id="contactPerson" readonly class="form-control" value="<%=user.contactPerson%>">
+                                        </div>
+                                        <div class="col-md-4 mt-2">
+                                            <label for="contactNumber" class="form-label">Contact Number</label>
+                                            <input type="text" name="contactNumber" id="contactNumber" readonly class="form-control" value="<%=user.contactNumber%>">
+                                        </div>
+                                        <div class="col-md-4 mt-2">
+                                            <label for="emailAddress" class="form-label">Email Address</label>
+                                            <input type="text" name="emailAddress" id="emailAddress" class="form-control" readonly value="<%=user.email%>">
+                                        </div>
+                                        <div class="col-md-4 mt-2">
+                                            <% if (messages.error) { %>
+                                                <label for="currentPassword" class="form-label text-danger">Current Password is incorrect!</label>
+                                            <% } else {%>
+                                                <label for="currentPassword" class="form-label">Current Password</label>
+                                            <% } %>
+                                            <input type="password" name="currentPassword" id="currentPassword" class="form-control">
+                                        </div>
+                                        <div class="col-md-4 mt-2">
+                                            <label for="newPassword" class="form-label">New Password</label>
+                                            <input type="password" name="newPassword" id="newPassword" disabled class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <hr>
+                                </div>
+                                <div class="button-flex mt-2 container">
+                                    <button class="btn btn-dark">Submit</button>
+                                </div>
+                                
+                            </form>
                         </div>
                     </div>
                     
                 </div>
-                
+
             </main>
             <footer class="py-4 bg-light mt-3">
                
@@ -191,7 +178,22 @@
         </div>
     </div>
 
-    <%- include('../partials/scripts') %> 
+   
+    
+<script>
+    const password = document.querySelector('#currentPassword')
+    setInterval(()=>{
+        // console.log(image.value);
+        
+        if(password.value!==''){
+          document.querySelector('#newPassword').disabled = false
+        }else{
+          document.querySelector('#newPassword').disabled = true
+        }
+    },1000)
+</script>
 
 </body>
 </html>
+
+

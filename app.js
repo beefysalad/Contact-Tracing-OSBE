@@ -275,6 +275,7 @@ app.get('/establishments-logs/:id',isLoggedin,async (req,res)=>{
     let currentDate = moment(new Date()).format('MM/DD/YYYY')
     res.render('establishments/elogs',{data,currentDate,arr,user,moment:moment})
 })
+
 app.get('/establishments-scanqr/:cam_num',isLoggedin,(req,res)=>{
     const {cam_num} = req.params
     const user = req.user
@@ -306,6 +307,49 @@ app.post('/establishments-save-map-location',isLoggedin,async(req,res)=>{
         }
     })
     res.redirect('/establishments-map-location')
+})
+app.patch('/establishments-account-setting',isLoggedin,async(req,res)=>{
+    const user = req.user
+    let newPass
+    // console.log(req.body.currentPassword)
+    Establishment.findById(user._id,(err,userz)=>{
+        if(req.body.currentPassword == ''){
+            console.log('1')
+            res.redirect('/establishments-account-settings')
+        }
+        else if(req.body.currentPassword!=''){
+            bcrypt.compare(req.body.currentPassword,userz.password,(err,resz)=>{
+                console.log(`test ${userz.password}`)
+                if(err) return done(err)
+                if(resz==false){
+                    req.flash('error','Current password isnt correct')
+                    res.redirect('/establishments-account-settings')
+                }else{
+                    bcrypt.genSalt(10,function(err,salt){
+                        bcrypt.hash(req.body.newPassword,salt,async(err,hash)=>{
+                            if(err){
+
+                            }
+                            newPass = await hash
+                            console.log(newPass)
+                            console.log(userz._id)
+                            Establishment.updateOne({_id:userz._id},{
+                                password:newPass
+                            }).then(data=>{
+                                // console.log(data)
+                                res.redirect('/establishments-account-settings')
+                            })
+
+                        })
+                    })
+                }
+            })
+        }
+    })
+})
+app.get('/establishments-account-settings',isLoggedin,async(req,res)=>{
+    const user = req.user
+    res.render('establishments/settings',{user})
 })
 app.get('/establishments-login',isLoggedOut,(req,res)=>{
     res.render('establishments/login')
