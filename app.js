@@ -31,16 +31,7 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 })
-// const storage = multer.diskStorage({
-    
-//     destination:(req,file,callback)=>{
-//         callback(null,'./public/uploads/images')
-//     },
-//     filename:(req,file,callback)=>{
-//         const ext = file.mimetype.split("/")[1]
-//         callback(null,Date.now() + file.originalname)
-//     }
-// })
+
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params:{
@@ -50,15 +41,7 @@ const storage = new CloudinaryStorage({
 const upload = multer({
     storage: storage,
    
-}) // limits:{
-    //     fileSize: 1024*1024*3
-    // }
-//DATABASE
-// mongoose.connect('mongodb://localhost:27017/CTA', {
-//     useNewUrlParser: true, 
-//     useUnifiedTopology: true,
-    
-// })
+})
 mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true, 
     useUnifiedTopology: true,
@@ -150,12 +133,10 @@ function isLoggedOut(req,res,next){
 
 passport.serializeUser(function(user,done){
     if(user instanceof Establishment){
-        // console.log('Establishment account ni siya chuy');
-        // console.log(user.id);
+        
         done(null,{id: user.id, type: 'Establishment'})
     }else if(user instanceof User){
-        // console.log('Client account ni siya chuy');
-        // console.log(user.id);
+       
         done(null,{id: user.id, type:'Client'})
     }
 })
@@ -192,7 +173,7 @@ app.get('/',(req,res)=>{
 })
 app.get('/forget-password/:type',async (req,res)=>{
     const {type} = req.params
-    // console.log(type)
+  
     res.render('main/forget',{type})
 })
 app.get('/about-us',(req,res)=>{
@@ -215,7 +196,7 @@ app.post('/forget-password/:type',async (req,res)=>{
         User.findOne({username:username},async(err,userz)=>{
             if(err) return err
             if(userz.emailAddress!==emailAddress){
-                // console.log(userz.emailAddress)
+                
                 req.flash('error','Email Address does not match!')
                 res.redirect('/forget-password/client')
             }else{
@@ -242,15 +223,14 @@ app.post('/forget-password/:type',async (req,res)=>{
             }
             
         })
-        // console.log('client dodong')
-        // res.redirect(`/client-login`)
+        
     }else if(type==='establishment'){
-        // console.log("NAKA SUD SA ESTBLISH")
+        
         Establishment.findOne({username:username},async(err,userz)=>{
             if(err) return err
-            // console.log(userz)
+           
             if(userz.email!==emailAddress){
-                // console.log(userz.email)
+               
                 req.flash('error','Email Address does not match!')
                 res.redirect('/forget-password/establishment')
             }else{
@@ -287,7 +267,7 @@ app.get('/establishments-logs/:id',isLoggedin,async (req,res)=>{
     const data = await Log.findOne({_id:id})
     let arr = []
     data.logs.reverse()
-    // , datalogs = data.logs.reverse()
+    
     for(let i=0; i<data.logs.length; i++){
         const d = await User.findOne({_id:data.logs[i].id})
         arr.push(d)
@@ -310,7 +290,7 @@ app.post('/establishments-save-map-location',isLoggedin,async(req,res)=>{
     const user = req.user
     Establishment.updateOne({_id:user._id}, {$set:{'coordinates.latitude':latitude,'coordinates.longitude':longitude}})
     .then(data=>{
-        // console.log(data)
+        
     })
     UserLog.find({'userlog._id':user._id})
     .then(data=>{
@@ -393,7 +373,7 @@ app.get('/establishments-send-notification-close-contacts/:date/:id',isLoggedin,
     }
     res.redirect(`/establishments-get-close-contact/${id}/${date}`)
     
-    // console.log(moment(date).format('MM/DD/YYYY'))
+  
     
 })
 app.get('/establishments-get-close-contact/:id/:datez',isLoggedin,async(req, res)=>{
@@ -487,7 +467,6 @@ app.post('/give-qr/:cam_num',(req,res)=>{
             let userDets = userz
             const date = new Date()
             const age = moment().diff(userz.birthDate,'years')
-            // console.log(`${date.getMonth()+1}-${date.getDate()}-${date.getFullYear()}-${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`);
             Log.updateOne({_id:user._id},{$push:{logs:[{id:userz._id,date:moment(new Date()).format('MM/DD/YYYY'),time:moment(new Date()).format('hh:mm:ss A'),name:fullName}]}})
                 .then(data=>{
                     
@@ -552,18 +531,15 @@ app.post('/eregister',(req,res)=>{
 //ROUTE FOR CLIENT
 app.get('/change-picture/:id',isLoggedinU,(req,res)=>{
     const {id} = req.params
-    // console.log(`get id :${id}`);
+   
     res.render('users/change',{id})
 })
 app.post('/change-picture/:id',upload.single('image'),isLoggedinU,(req,res)=>{
     const {id} = req.params
-    // console.log(req.file);
-    // console.log(`post id:${id}`);
-    // console.log(req.file.filename);
-    // console.log(req.file.path);
+    
     User.findByIdAndUpdate(id,{image:req.file.path})
         .then(data=>{
-            // console.log('Success yawa');
+       
             res.redirect('/client-dashboard')
         })
 })
@@ -612,18 +588,15 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
        
         if((! req.file || ! req.file.path) && req.body.opassword == '')
         {
-            // console.log("1");
-         
-         
+          
             User.updateOne({_id:user._id},{emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address}).then(data=>{
-               
                 res.redirect('/client-profile')
             })
         } 
   
         else if((! req.file || ! req.file.path) && req.body.opassword != '')
         {
-            // console.log("2");
+            
             bcrypt.compare(req.body.opassword,user.password,(err,resz)=>{
                 if(err) return done(err)
                 if(resz==false){
@@ -634,7 +607,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
                         
                         bcrypt.hash(req.body.password,salt,async function(err,hash){
                             if(err){
-                                // console.log("NI ERROR CHUY");
+                                
                             }
                            
                             newPass = await hash
@@ -654,7 +627,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
         
         else if(req.body.opassword == '' && (req.file.path || req.file))
         {
-            // console.log("3");
+            
           
             User.updateOne({_id:user._id},{emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address,image:req.file.path}).then(data=>{
               
@@ -664,7 +637,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
         
         else if(req.body.opassword != '' && (req.file.path || req.file))
         {
-            // console.log("4");
+            
             bcrypt.compare(req.body.opassword,user.password,(err,resz)=>{
                 if(err) return done(err)
                 if(resz==false){
@@ -675,7 +648,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
                         
                         bcrypt.hash(req.body.password,salt,async function(err,hash){
                             if(err){
-                                // console.log("NI ERROR CHUY");
+                                
                             }
                           
                             newPass = await hash
