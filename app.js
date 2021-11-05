@@ -192,7 +192,7 @@ app.get('/',(req,res)=>{
 })
 app.get('/forget-password/:type',async (req,res)=>{
     const {type} = req.params
-    console.log(type)
+    // console.log(type)
     res.render('main/forget',{type})
 })
 app.get('/about-us',(req,res)=>{
@@ -350,6 +350,7 @@ app.get('/establishments-change-status-close-contacts/:date/:id',isLoggedin, asy
         
         if((data.logs[i].date === moment(date).format('MM/DD/YYYY')) && data.logs[i].id !==id)
         {
+            
             const userz = await User.updateOne({_id:data.logs[i].id},{status:'Close Contact'})
             arr.push(data.logs[i])
         }
@@ -535,11 +536,11 @@ app.post('/eregister',(req,res)=>{
                     })
                     await newEstablish.save()
                         .then(data=>{
-                            console.log('Successfully added an establishment user!');
+                            // console.log('Successfully added an establishment user!');
                             Log.insertMany([
                                 {_id:data._id}
                             ]).then(data=>{
-                                console.log('successfully added a log');
+                                // console.log('successfully added a log');
                             })
                         })
                     res.redirect('/establishments-login')
@@ -559,7 +560,7 @@ app.post('/change-picture/:id',upload.single('image'),isLoggedinU,(req,res)=>{
     // console.log(req.file);
     // console.log(`post id:${id}`);
     // console.log(req.file.filename);
-    console.log(req.file.path);
+    // console.log(req.file.path);
     User.findByIdAndUpdate(id,{image:req.file.path})
         .then(data=>{
             // console.log('Success yawa');
@@ -611,7 +612,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
        
         if((! req.file || ! req.file.path) && req.body.opassword == '')
         {
-            console.log("1");
+            // console.log("1");
          
          
             User.updateOne({_id:user._id},{emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address}).then(data=>{
@@ -622,7 +623,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
   
         else if((! req.file || ! req.file.path) && req.body.opassword != '')
         {
-            console.log("2");
+            // console.log("2");
             bcrypt.compare(req.body.opassword,user.password,(err,resz)=>{
                 if(err) return done(err)
                 if(resz==false){
@@ -633,7 +634,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
                         
                         bcrypt.hash(req.body.password,salt,async function(err,hash){
                             if(err){
-                                console.log("NI ERROR CHUY");
+                                // console.log("NI ERROR CHUY");
                             }
                            
                             newPass = await hash
@@ -653,7 +654,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
         
         else if(req.body.opassword == '' && (req.file.path || req.file))
         {
-            console.log("3");
+            // console.log("3");
           
             User.updateOne({_id:user._id},{emailAddress:req.body.emailAddress,contactNumber:req.body.contactNumber,address:req.body.address,image:req.file.path}).then(data=>{
               
@@ -663,7 +664,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
         
         else if(req.body.opassword != '' && (req.file.path || req.file))
         {
-            console.log("4");
+            // console.log("4");
             bcrypt.compare(req.body.opassword,user.password,(err,resz)=>{
                 if(err) return done(err)
                 if(resz==false){
@@ -674,7 +675,7 @@ app.patch('/client-profile/edit',upload.single('img'),isLoggedinU,async (req,res
                         
                         bcrypt.hash(req.body.password,salt,async function(err,hash){
                             if(err){
-                                console.log("NI ERROR CHUY");
+                                // console.log("NI ERROR CHUY");
                             }
                           
                             newPass = await hash
@@ -750,7 +751,7 @@ app.post('/client-map-save-location',isLoggedinU,async (req,res)=>{
     const user = req.user
     User.updateOne({_id:user._id}, {$set:{'coordinates.latitude':latitude,'coordinates.longitude':longitude}})
     .then(data=>{
-        console.log(data)
+        // console.log(data)
     })
 
     res.redirect('/client-map-location')
@@ -808,11 +809,11 @@ app.post('/client-register',(req,res)=>{
                     let id
                     await newUser.save()
                         .then(data=>{
-                            console.log('Successfully added a client user!');
-                            console.log(data._id)
+                            // console.log('Successfully added a client user!');
+                            // console.log(data._id)
                             UserLog.insertMany([
                                 {_id:data._id}]).then(dataz=>{
-                                    console.log('Successfully added a user log')
+                                    // console.log('Successfully added a user log')
                                 })
                             id = data._id
                         })
@@ -824,16 +825,16 @@ app.post('/client-register',(req,res)=>{
 })
 app.use((err,req,res,next)=>{
     // res.status(404).send('TO DO PANI ANG ERROR PAGE PARA SA UNKNOWN ROUTES!')
-    console.log(err)
+    // console.log(err)
     res.status(404).render('errorpage/404')
 })
 
 app.use((err,req,res,next)=>{
-    console.log(err)
+    // console.log(err)
     res.status(500).render('errorpage/500')
 })
 app.use((err,req,res,next)=>{
-    console.log(err)
+    // console.log(err)
     res.status(401).render('errorpage/401')
 })
 
